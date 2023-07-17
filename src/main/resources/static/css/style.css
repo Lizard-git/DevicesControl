@@ -1,0 +1,108 @@
+/* import fonts ***************************************************************************************************** */
+@font-face {
+    font-family: "Roboto-Light";
+    src: url("./../fonts/roboto/Roboto-Light.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal;
+}
+
+@font-face {
+    font-family: "Roboto-Regular";
+    src: url("./../fonts/roboto/Roboto-Regular.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal;
+}
+
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("./../fonts/roboto/Roboto-Bold.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal;
+}
+/* import fonts end ************************************************************************************************* */
+
+/* default style **************************************************************************************************** */
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+}
+/* default style end ************************************************************************************************ */
+
+/* navigation panel style ******************************************************************************************* */
+nav {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    bottom: 15px;
+    /*height: 97vh;*/
+    min-height: 600px;
+    width: 250px;
+    /*bottom: 10px;*/
+    border-radius: 10px;
+    background-color: #3C3F57;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    color: white;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Roboto-Bold, serif;
+
+}
+
+.logo h6 {
+    padding: 0;
+    margin: 0 0 0 10px;
+    font-size: 14px;
+}
+
+.navbarMobile {
+    width: 80px !important;
+}
+
+.navbarMobile h6, p {
+    display: none;
+}
+/* navigation panel style end *************************************************************************************** */
+
+/* content container style ****************************************************************************************** */
+main {
+    left: 265px;
+    position: relative;
+    width: calc(100vw - 282px);
+    min-height: 200vh;
+    padding: 15px;
+}
+
+.contentMobile {
+    left: 95px;
+    width: calc(100vw - 112px);
+}
+/* content container style end ************************************************************************************** */
+
+.info-role {
+    margin: 4px 0 0 30px;
+    padding: 0;
+    font-family: Roboto-Bold, serif;
+    font-size: 14px;
+}
+
+/* scroll style ***************************************************************************************************** */
+:root{
+    scrollbar-color: #3C3F57 white !important;
+    scrollbar-width: thin !important;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #3C3F57;
+}
+/* scroll style end ************************************************************************************************* */
