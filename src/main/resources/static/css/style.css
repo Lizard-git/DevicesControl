@@ -27,6 +27,18 @@ html, body {
     height: 100%;
     background-color: white;
 }
+
+.list-default {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
 /* default style end ************************************************************************************************ */
 
 /* navigation panel style ******************************************************************************************* */
@@ -36,7 +48,7 @@ nav {
     left: 15px;
     bottom: 15px;
     /*height: 97vh;*/
-    min-height: 600px;
+    min-height: 500px;
     width: 250px;
     /*bottom: 10px;*/
     border-radius: 10px;
@@ -44,6 +56,7 @@ nav {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     padding: 15px;
     color: white;
+    z-index: 1000;
 }
 
 .logo {
@@ -57,15 +70,8 @@ nav {
 .logo h6 {
     padding: 0;
     margin: 0 0 0 10px;
-    font-size: 14px;
-}
-
-.navbarMobile {
-    width: 80px !important;
-}
-
-.navbarMobile h6, p {
-    display: none;
+    font-size: 12px;
+    font-family: Roboto-Bold, serif;
 }
 /* navigation panel style end *************************************************************************************** */
 
@@ -77,19 +83,73 @@ main {
     min-height: 200vh;
     padding: 15px;
 }
+/* content container style end ************************************************************************************** */
 
-.contentMobile {
+/* nav style ******************************************************************************************************** */
+.menu { margin-top: 15px; }
+
+.menu li {
+    position: relative;
+    border-radius: 5px;
+}
+
+.menu > li > a {
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.menu > li > a > p {
+    margin: 0 0 0 10px;
+    padding: 0;
+    font-family: Roboto-Regular, serif;
+    font-size: 14px;
+}
+
+.menu li:hover { background-color: white; }
+
+.menu li:hover > a > * { color: black !important; }
+
+.menu > .active { background-color: white !important; }
+
+.menu > .active > a > * { color: black !important; }
+/* nav style end **************************************************************************************************** */
+
+/* nav open\close style ********************************************************************************************* */
+.navbarMobile {
+    width: 80px !important;
+}
+
+.navbarMobile .link-item > p {
+    display: none;
+}
+
+.navbarMobile .logo > h6 {
+    display: none;
+}
+
+.navbarMobile > .header-navbar {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbarMobile .logo {
+    margin-top: 10px;
+}
+
+.navbarMobile .menu > li > a {
+    justify-content: center;
+}
+
+.closeNavbar {
     left: 95px;
     width: calc(100vw - 112px);
 }
-/* content container style end ************************************************************************************** */
-
-.info-role {
-    margin: 4px 0 0 30px;
-    padding: 0;
-    font-family: Roboto-Bold, serif;
-    font-size: 14px;
-}
+/* nav open\close style end ***************************************************************************************** */
 
 /* scroll style ***************************************************************************************************** */
 :root{
