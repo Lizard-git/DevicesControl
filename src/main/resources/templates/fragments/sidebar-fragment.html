@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <nav th:fragment="sidebar(active)" id="navbar-toggle" class="default-shadow">
+        <div class="header-navbar d-flex justify-content-between">
+            <div class="logo">
+                <img th:src="@{/image/logo.png}" width="30px" height="30px" alt="logo">
+                <h6>Учет технических<br>средств организации</h6>
+            </div>
+            <i class="bi bi-list" style="font-size: 1.4rem; color: white; cursor: pointer" onclick="toggleNavbarScript()"></i>
+        </div>
+        <ul class="menu list-default">
+            <li th:classappend="${active == '/home'} ? 'active'">
+                <a class="link-item" href="#">
+                    <i class="bi bi-columns-gap" style="font-size: 1.4rem; color: white;"></i>
+                    <p>Домашняя страница</p>
+                </a>
+            </li>
+            <li th:classappend="${active == '/devices'} ? 'active'">
+                <a class="link-item" href="#">
+                    <i class="bi bi-motherboard" style="font-size: 1.4rem; color: white;"></i>
+                    <p>Работа с техникой</p>
+                </a>
+            </li>
+            <li th:classappend="${active == '/doc'} ? 'active'">
+                <a class="link-item" href="#">
+                    <i class="bi bi-file-earmark-text" style="font-size: 1.4rem; color: white;"></i>
+                    <p>Документы</p>
+                </a>
+            </li>
+            <li th:classappend="${active == '/history'} ? 'active'">
+                <a class="link-item" href="#">
+                    <i class="bi bi-clock-history" style="font-size: 1.4rem; color: white;"></i>
+                    <p>История</p>
+                </a>
+            </li>
+            <li th:classappend="${active == '/info'} ? 'active'">
+                <a class="link-item" href="#">
+                    <i class="bi bi-info-circle" style="font-size: 1.4rem; color: white;"></i>
+                    <p>Информация</p>
+                </a>
+            </li>
+            <li th:classappend="${active == '/settings'} ? 'active'">
+                <a class="link-item" href="#">
+                    <i class="bi bi-gear" style="font-size: 1.4rem; color: white;"></i>
+                    <p>Настройки</p>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>

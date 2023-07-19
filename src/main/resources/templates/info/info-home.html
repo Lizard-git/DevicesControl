@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Учет ВТ</title>
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:replace="/fragments/sidebar-fragment.html::sidebar('/home')" ></nav>
+<main id="content-main">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="d-flex align-items-center justify-content-between mt-3">
+                <h6 class="text-muted">Домашняя страница</h6>
+                <a class="btn btn-close-white default-shadow" href="/logout"> <i class="bi bi-box-arrow-right"></i> Выход</a>
+            </div>
+        </div>
+    </div>
+</main>
+<script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/jquery/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/select2/js/select2.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+</script>
+<script type="text/javascript" th:src="@{/js/script.js}"></script>
+</body>
+</html>

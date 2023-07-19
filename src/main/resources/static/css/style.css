@@ -39,6 +39,20 @@ a {
     padding: 0;
     text-decoration: none;
 }
+
+.default-shadow {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.bg-color-light-blue {
+    background-color: #8E91AB;
+    color: white;
+}
+
+.bg-color-dark-blue {
+    background-color: #141839;
+    color: white;
+}
 /* default style end ************************************************************************************************ */
 
 /* navigation panel style ******************************************************************************************* */
@@ -53,7 +67,6 @@ nav {
     /*bottom: 10px;*/
     border-radius: 10px;
     background-color: #3C3F57;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     padding: 15px;
     color: white;
     z-index: 1000;
@@ -80,13 +93,13 @@ main {
     left: 265px;
     position: relative;
     width: calc(100vw - 282px);
-    min-height: 200vh;
+    min-height: 100vh;
     padding: 15px;
 }
 /* content container style end ************************************************************************************** */
 
 /* nav style ******************************************************************************************************** */
-.menu { margin-top: 15px; }
+.menu { margin-top: 30px; }
 
 .menu li {
     position: relative;
@@ -150,6 +163,42 @@ main {
     width: calc(100vw - 112px);
 }
 /* nav open\close style end ***************************************************************************************** */
+
+/* info card style */
+.main-col {
+    border-right: 1px solid white ;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-info, .main-col {
+    font-family: Roboto-Light, serif;
+    font-size: 14px;
+}
+
+@media (max-width: 767px) {
+    .main-col {
+        border-right: none;
+        border-bottom: 1px solid white;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .card-info {
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+
+.list-status-type-device li{
+    display: flex;
+    justify-content: space-between;
+}
+
 
 /* scroll style ***************************************************************************************************** */
 :root{
