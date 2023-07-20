@@ -11,4 +11,8 @@ public class TestController {
     public String PageHome() {
         return "index";
     }
+    @GetMapping(value = "/plogin")
+    public String PageLogin() {
+        return "login";
+    }
 }
