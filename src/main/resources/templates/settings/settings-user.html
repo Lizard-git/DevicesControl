@@ -15,6 +15,23 @@
         <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки пользователя')}"></div>
 
         <div th:replace="~{/fragments/settings-tabs.html::settings-tabs('/users')}"></div>
+
+        <div class="card bg-color-light-blue default-shadow mt-4">
+            <div class="card-header">Личные настройки</div>
+            <div class="card-body card-body-custom">
+<!--                <select class="js-example-responsive " multiple="multiple" style="width: 75%;">-->
+<!--                    <option value="1">hello</option>-->
+<!--                    <option th:selected="${true}" value="2" >world</option>-->
+<!--                </select>-->
+            </div>
+        </div>
+
+        <div class="card default-shadow mt-4">
+            <div class="card-header">Все пользователи</div>
+            <div class="card-body card-body-custom">
+
+            </div>
+        </div>
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>
@@ -23,6 +40,10 @@
 <script>
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
+    });
+    $(".js-example-responsive").select2({
+        width: 'resolve',
+        maximumSelectionLength: 1// need to override the changed default
     });
 </script>
 <script type="text/javascript" th:src="@{/js/script.js}"></script>

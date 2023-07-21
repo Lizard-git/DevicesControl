@@ -10,7 +10,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/settings")
 public class SettingsController {
     @GetMapping(value = {"/users"})
-    public String PageAllDevice() {
+    public String PageUser() {
         return "settings/settings-user";
+    }
+
+    @GetMapping(value = {"/address"})
+    public String PageAddress() {
+        return "settings/settings-address";
+    }
+
+    @GetMapping(value = {"/devices"})
+    public String PageDevice() {
+        return "settings/settings-devices";
+    }
+
+    @GetMapping(value = {"/consumable"})
+    public String PageConsumable() {
+        return "settings/settings-consumable";
     }
 }

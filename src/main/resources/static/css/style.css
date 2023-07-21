@@ -201,6 +201,10 @@ main {
 }
 
 
+.card-body-custom {
+    color: black !important;
+}
+
 /* scroll style ***************************************************************************************************** */
 :root{
     scrollbar-color: #3C3F57 white !important;
