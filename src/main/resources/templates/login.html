@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Авторизация</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
-    <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
-    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
-    <link rel="stylesheet" th:href="@{/css/style-auth.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style-auth.css}">
 </head>
 <body>
 <!--    <img th:src="@{/image/login.webp}" class="img-fluid img-login" alt="Sample image">-->
@@ -18,14 +18,12 @@
                 <h6 class="text-white">Учет технических средств организации</h6>
             </div>
 
-            <form class="auth-form" method="get" action="/test">
+            <form class="auth-form" method="post">
                 <div class="input-form-group">
                     <label for="user-login">Логин</label>
                     <select id="user-login" class="js-example-basic-single" name="login">
-                        <option value="AL">Alabama</option>
-                        <option value="BL">Blabama</option>
-                        <option value="CL">Clabama</option>
-                        <option value="GL">Dlabama</option>
+                        <option value="-1"></option>
+                        <option th:each="user : ${AllUsers}" th:value="${user.getLogin()}" th:text="${user.getLogin()}"></option>
                     </select>
                 </div>
                 <div class="input-form-group">
@@ -33,6 +31,11 @@
                     <input id="user-password" class="" type="password" name="password">
                 </div>
                 <button class="btn btn-primary" type="submit">Войти</button>
+
+                <div class="info d-flex flex-column justify-content-center align-items-center w-100 ">
+                    <p th:if="${error}" class="text-danger mb-0 mt-4" >Не верный логин или пароль</p>
+                    <p th:if="${logout}" class="text-success mb-0 mt-4">Вы вышли из программы</p>
+                </div>
             </form>
         </div>
     </div>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:fragment="header-title(title)" class="row">
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <h6 class="text-muted" th:text="${title}">Название страницы</h6>
+            <a class="btn btn-close-white default-shadow" href="/logout"> <i class="bi bi-box-arrow-right"></i> Выход</a>
+        </div>
+    </div>
+</body>
+</html>

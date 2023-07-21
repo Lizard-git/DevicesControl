@@ -9,15 +9,10 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="/fragments/sidebar-fragment.html::sidebar('/home')" ></nav>
+<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/history')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div class="row">
-            <div class="d-flex align-items-center justify-content-between mt-3">
-                <h6 class="text-muted">Домашняя страница</h6>
-                <a class="btn btn-close-white default-shadow" href="/logout"> <i class="bi bi-box-arrow-right"></i> Выход</a>
-            </div>
-        </div>
+        <div th:replace="~{/fragments/header-title-fragment.html::header-title('История пользователей')}"></div>
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>

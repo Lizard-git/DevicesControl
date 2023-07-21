@@ -10,28 +10,36 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <nav th:replace="/fragments/sidebar-fragment.html::sidebar('/home')" ></nav>
+    <nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/home')}" ></nav>
     <main id="content-main">
         <div class="container-fluid">
-            <div class="row">
-                <div class="d-flex align-items-center justify-content-between mt-3">
-                    <h6 class="text-muted">Домашняя страница</h6>
-                    <a class="btn btn-close-white default-shadow" href="/logout"> <i class="bi bi-box-arrow-right"></i> Выход</a>
-                </div>
-            </div>
+            <div th:replace="~{/fragments/header-title-fragment.html::header-title('Домашняя страница')}"></div>
 
             <div class="card default-shadow mt-4">
                 <div class="row card-body d-flex align-items-center">
-                    <div class="col-12 col-sm-6 user-info d-flex align-items-center">
+                    <div class="col-12 user-info d-flex align-items-center">
                         <i class="bi bi-person-circle" style="font-size: 70px; color: #8E91AB"></i>
                         <div class="d-flex flex-column w-100 m-3">
-                            <h6 class="p-0 m-0"><nobr>Фамилия Имя Отчество</nobr></h6>
-                            <p class="text-muted p-0 m-0">address</p>
-                            <p class="text-muted p-0 m-0">отдел/должность</p>
+                            <h6 class="p-0 m-0">
+                                <nobr
+                                    th:text="${
+                                        AuthUser.getSurname() + ' ' +
+                                        AuthUser.getName() + ' ' +
+                                        AuthUser.getMiddleName()
+                                    }">
+                                </nobr>
+                            </h6>
+                            <p class="text-muted p-0 m-0"
+                               th:text="${
+                                AuthUser.getAddress().getCity().getName() + ' ' +
+                                AuthUser.getAddress().getStreet() + ' ' +
+                                AuthUser.getAddress().getHouse() + ' ' +
+                                AuthUser.getAddress().getSection() + ' (' +
+                                AuthUser.getAddress().getRegion().getName() + ')'
+                            }">
+                            </p>
+                            <p class="text-muted p-0 m-0" th:text="${AuthUserTelbook.getDepartment() + '/' + AuthUserTelbook.getPosition()}">отдел/должность</p>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-6 user-dop-info">
-                        Доп инфо
                     </div>
                 </div>
             </div>
@@ -76,7 +84,7 @@
                             <div class="row">
                                 <div class="col-12 col-md-12 col-xxl-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-4 card-info"><p><nobr>Установленно (сегодня)</nobr></p><h4>20000</h4></div>
+                                        <div class="col-12 col-md-4 card-info"><p><nobr>Установленно <small style="font-size: 0.7em">(сегодня)</small></nobr></p><h4>20000</h4></div>
                                         <div class="col-12 col-md-4 card-info"><p><nobr>Настройка\Ремонт</nobr></p><h4>20000</h4></div>
                                         <div class="col-12 col-md-4 card-info"><p><nobr>На складе</nobr></p><h4>20000</h4></div>
                                     </div>

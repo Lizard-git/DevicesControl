@@ -14,37 +14,37 @@
         </div>
         <ul class="menu list-default">
             <li th:classappend="${active == '/home'} ? 'active'">
-                <a class="link-item" href="#">
+                <a class="link-item" href="/home">
                     <i class="bi bi-columns-gap" style="font-size: 1.4rem; color: white;"></i>
                     <p>Домашняя страница</p>
                 </a>
             </li>
             <li th:classappend="${active == '/devices'} ? 'active'">
-                <a class="link-item" href="#">
+                <a class="link-item" href="/devices/all">
                     <i class="bi bi-motherboard" style="font-size: 1.4rem; color: white;"></i>
                     <p>Работа с техникой</p>
                 </a>
             </li>
             <li th:classappend="${active == '/doc'} ? 'active'">
-                <a class="link-item" href="#">
+                <a class="link-item" href="/doc/home">
                     <i class="bi bi-file-earmark-text" style="font-size: 1.4rem; color: white;"></i>
                     <p>Документы</p>
                 </a>
             </li>
             <li th:classappend="${active == '/history'} ? 'active'">
-                <a class="link-item" href="#">
+                <a class="link-item" href="/history/home">
                     <i class="bi bi-clock-history" style="font-size: 1.4rem; color: white;"></i>
                     <p>История</p>
                 </a>
             </li>
             <li th:classappend="${active == '/info'} ? 'active'">
-                <a class="link-item" href="#">
+                <a class="link-item" href="/info/home">
                     <i class="bi bi-info-circle" style="font-size: 1.4rem; color: white;"></i>
                     <p>Информация</p>
                 </a>
             </li>
             <li th:classappend="${active == '/settings'} ? 'active'">
-                <a class="link-item" href="#">
+                <a class="link-item" href="/settings/users">
                     <i class="bi bi-gear" style="font-size: 1.4rem; color: white;"></i>
                     <p>Настройки</p>
                 </a>
