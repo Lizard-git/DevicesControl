@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <ul th:fragment="settings-tabs(active)" class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${active == '/users'} ? 'active'" aria-current="page" href="/settings/users">Пользователи</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${active == '/address'} ? 'active'" href="/settings/address">Адреса</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${active == '/devices'} ? 'active'" href="/settings/devices">Устройства</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${active == '/consumable'} ? 'active'" href="/settings/consumable">Расходники</a>
+        </li>
+    </ul>
+</body>
+</html>
