@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "city", schema = "devices_control")
-public class CityEntity {
+@Table(name = "settlements", schema = "devices_control")
+public class SettlementsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -21,6 +21,13 @@ public class CityEntity {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "city")
-    private List<RegionEntity> regions;
+    @Column(name = "type")
+    private String type;
+
+    @ManyToOne
+    @JoinColumn(name = "id_region", nullable = false)
+    private RegionEntity region;
+
+    @OneToMany(mappedBy = "settlements", cascade = CascadeType.REMOVE)
+    private List<AddressEntity> address;
 }

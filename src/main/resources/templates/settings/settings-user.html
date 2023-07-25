@@ -55,10 +55,11 @@
                                 <select id="user-address-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{address}">
                                     <option th:each="address : ${AllAddress}" th:value="${address.getId()}"
                                             th:text="${
-                                                address.getCity().getName() + ' ' +
+                                                address.getSettlements().getType() + ' ' +
+                                                address.getSettlements().getName() + ' ' +
                                                 address.getStreet() + ' ' +
                                                 address.getHouse()  + ' (' +
-                                                address.getRegion().getName() + ')'
+                                                address.getSettlements().getRegion().getName() + ')'
                                             }"></option>
                                 </select>
                             </div>
@@ -123,10 +124,11 @@
                                 <select id="user-address-create" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{address}">
                                     <option th:each="address : ${AllAddress}" th:value="${address.getId()}"
                                             th:text="${
-                                                address.getCity().getName() + ' ' +
+                                                address.getSettlements().getType() + ' ' +
+                                                address.getSettlements().getName() + ' ' +
                                                 address.getStreet() + ' ' +
                                                 address.getHouse()  + ' (' +
-                                                address.getRegion().getName() + ')'
+                                                address.getSettlements().getRegion().getName() + ')'
                                             }"></option>
                                 </select>
                             </div>
@@ -173,6 +175,7 @@
                         <th scope="col">Имя</th>
                         <th scope="col">Отчество</th>
                         <th scope="col">Роль</th>
+                        <th scope="col">Район</th>
                         <th scope="col">Действия</th>
                     </tr>
                     </thead>
@@ -183,6 +186,7 @@
                         <td th:text="${user.getName()}">1</td>
                         <td th:text="${user.getMiddleName()}">1</td>
                         <td th:text="${user.getRole().getDescription()}">1</td>
+                        <td th:text="${user.getAddress().getSettlements().getRegion().getName()}">1</td>
                         <td class="d-flex ">
                             <form th:if="${user.getIsDeleted() == null}" th:method="post" th:action="'/settings/users/remove/' + ${user.getId()}">
                                 <button type="submit" class="btn btn-danger">Удалить</button>

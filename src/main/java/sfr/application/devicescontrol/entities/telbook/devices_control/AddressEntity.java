@@ -20,13 +20,8 @@ public class AddressEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "city")
-    private CityEntity city;
-
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "id_region", nullable = false)
-    private RegionEntity region;
+    @JoinColumn(name = "settlements")
+    private SettlementsEntity settlements;
 
     @Column(name = "street")
     private String street;
@@ -34,13 +29,19 @@ public class AddressEntity {
     @Column(name = "house")
     private String house;
 
-    @Column(name = "section")
-    private String section;
-
     @JsonIgnore
     @OneToMany(mappedBy = "address")
     private List<UserEntity> users;
 
+    @PreRemove
+    private void clearAddressForUser() {
+        users.forEach(userEntity ->
+            userEntity.setAddress(null)
+        );
+//        devices.forEach(device ->
+//                device.setAddress(null)
+//        );
+    }
 //    @JsonIgnore
 //    @OneToMany(mappedBy = "address")
 //    private List<DevicesEntity> devices;

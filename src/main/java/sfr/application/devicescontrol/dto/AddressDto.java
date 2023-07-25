@@ -1,14 +1,11 @@
 package sfr.application.devicescontrol.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import sfr.application.devicescontrol.entities.telbook.devices_control.CityEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.RegionEntity;
+import sfr.application.devicescontrol.entities.telbook.devices_control.SettlementsEntity;
 
 @Getter
 @Setter
@@ -18,18 +15,14 @@ import sfr.application.devicescontrol.entities.telbook.devices_control.RegionEnt
 public class AddressDto {
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "city")
-    private CityEntity city;
+    private SettlementsEntity settlements;
 
     @Size(max = 100, message = "Название улицы")
     @NotEmpty(message = "Сокращенное имя не может быть пустым")
-    @Column(name = "street")
     private String street;
 
     @Size(max = 100, message = "Значение имени должно быть не менее 5 символов и не более 100")
     @NotEmpty(message = "Сокращенное имя не может быть пустым")
-    @Column(name = "house")
     private String house;
 
     // сокращенное имя для адреса
