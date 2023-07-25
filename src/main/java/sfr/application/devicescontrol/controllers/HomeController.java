@@ -19,6 +19,7 @@ public class HomeController {
     @GetMapping(value = {"", "/", "/home"})
     public String PageHome(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
 
         UsersTelbookEntity usersTelbook = userTelbookService.getByDomainAndTubNumber(user.getDomainName(), user.getTabNumber());

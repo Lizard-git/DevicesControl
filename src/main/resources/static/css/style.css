@@ -53,6 +53,15 @@ a {
     background-color: #141839;
     color: white;
 }
+
+input, textarea {
+    color: #555555 !important;
+}
+
+input, select, textarea {
+    font-family: Roboto-Light, serif !important;
+    font-size: 14px !important;
+}
 /* default style end ************************************************************************************************ */
 
 /* navigation panel style ******************************************************************************************* */
@@ -194,17 +203,18 @@ main {
     }
 }
 
-
 .list-status-type-device li{
     display: flex;
     justify-content: space-between;
 }
 
-
 .card-body-custom {
     color: black !important;
 }
 
+.pagination {
+    float: right !important;
+}
 /* scroll style ***************************************************************************************************** */
 :root{
     scrollbar-color: #3C3F57 white !important;

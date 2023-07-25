@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Учет ВТ</title>
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
+<main id="content-main">
+    <div class="container-fluid">
+        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки пользователя')}"></div>
+
+        <div th:replace="~{/fragments/settings-tabs.html::settings-tabs('/users')}"></div>
+
+        <div class="card bg-color-light-blue default-shadow mt-4">
+            <div class="card-header">Редактирование пользователя</div>
+            <div class="card-body card-body-custom">
+                <div class="alert alert-info mt-4" role="alert">
+                    Для изменения личных данных измените данные в соответсвующих полях, оставив поле "Пароль" пустым. <br>
+                    Для изменения пароля внесите изменения в его поле. Помните что длинна пароля должна составлять минимум 6 символов. <br>
+                    Логин поменять нельзя!
+                </div>
+                <form th:method="post" action="/settings/users/change" th:object="${User}">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <input type="hidden" th:field="*{id}">
+                            <input class="form-control" type="hidden" th:field="*{login}">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                                <label class="text-white" for="user-login-change">Логин</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Ошибка</small>
+                                <input id="user-login-change" class="form-control" type="text"  th:value="*{login}" disabled>
+                            </div>
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                                <label class="text-white" for="user-password-change">Пароль</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Ошибка</small>
+                                <input id="user-password-change" class="form-control" type="password" autocomplete="new-password" th:field="*{password}">
+                            </div>
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                                <label class="text-white" for="user-address-change">Адрес</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Ошибка</small>
+                                <select id="user-address-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{address}">
+                                    <option th:each="address : ${AllAddress}" th:value="${address.getId()}"
+                                            th:text="${
+                                        address.getCity().getName() + ' ' +
+                                        address.getStreet() + ' ' +
+                                        address.getHouse()  + ' (' +
+                                        address.getRegion().getName() + ')'
+                                    }"></option>
+                                </select>
+                            </div>
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                                <label class="text-white" for="user-role-change">Роль</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Ошибка</small>
+                                <select id="user-role-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{role}">
+                                    <option th:each="role : ${AllRoles}" th:value="${role.getId()}" th:text="${role.getDescription()}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                                <label class="text-white" for="user-surname-change">Фамилия</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Ошибка</small>
+                                <input id="user-surname-change" class="form-control" type="text" th:field="*{surname}">
+                            </div>
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                                <label class="text-white" for="user-name-change">Имя</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка</small>
+                                <input id="user-name-change" class="form-control" type="text" th:field="*{name}">
+                            </div>
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                                <label class="text-white" for="user-middle-name-change">Отчество</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}">Ошибка</small>
+                                <input id="user-middle-name-change" class="form-control" type="text" th:field="*{middleName}">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">Изменить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/jquery/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/select2/js/select2.min.js}"></script>
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+    $(".js-example-responsive").select2({
+        width: 'resolve',
+        maximumSelectionLength: 1// need to override the changed default
+    });
+</script>
+<script type="text/javascript" th:src="@{/js/script.js}"></script>
+</body>
+</html>

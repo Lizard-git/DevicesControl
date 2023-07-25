@@ -1,8 +1,6 @@
 package sfr.application.devicescontrol.entities.telbook.devices_control;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Date;
@@ -21,30 +19,21 @@ public class UserEntity {
     @Column(name = "id")
     private Long id;
 
-    @Size(max = 100, message = "Значение имени должно быть не более 50 символов")
-    @NotEmpty(message = "Login не может быть пустым")
-    @Column(name = "login", nullable = false, unique = true, length = 50)
+    @Column(name = "login", nullable = false, unique = true, length = 100)
     private String login;
 
-    @Size()
-    @NotEmpty(message = "Пароль не может быть пустым")
     @Column(name = "password", nullable = false)
     private String password;
 
     //Фамилия
-    @Size(max = 255, message = "Значение фамилии должно быть не более 255 символов")
-    @NotEmpty(message = "Фамилия не может быть пустым")
     @Column(name = "surname", nullable = false)
     private String surname;
 
     //Имя
-    @Size(max = 255, message = "Значение имени должно быть не более 255 символов")
-    @NotEmpty(message = "Имя не может быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
 
     //Отчество
-    @Size(max = 255, message = "Значение отчества должно быть не более 255 символов")
     @Column(name = "middle_name")
     private String middleName;
 

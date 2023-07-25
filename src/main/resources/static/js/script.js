@@ -60,3 +60,19 @@ function toggleNavbarScript() {
         localStorage.setItem("navbar-toggle", !navbarToggle.hasClass("navbarMobile"));
     }
 }
+
+function getSurnameAndMiddleNameAndName(targetObject) {
+    let surname = document.getElementById("user-surname-create");
+    let name = document.getElementById("user-name-create");
+    let middleName = document.getElementById("user-middle-name-create");
+    $.ajax({
+        type:'post',
+        url:'/api/v1/users/get/' + targetObject.value,
+        success:function(result){// получаем ответ с сервера
+            surname.value = result.name.split(" ")[1];
+            name.value = result.name.split(" ")[2];
+            middleName.value = result.name.split(" ")[3];
+        }
+
+    })
+}

@@ -14,7 +14,6 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Subselect("select " +
         "PROV_TER_ORG.USERS.ID id, " +
         "PROV_TER_ORG.USERS.FIO name, " +

@@ -50,7 +50,6 @@ public class SecurityConfiguration {
                             "/fonts/**").permitAll()
                     .anyRequest().authenticated()
             );
-                //.securityMatcher("/assets/**", "/login", "/v1/**")
         return http.build();
     }
 }

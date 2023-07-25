@@ -20,7 +20,7 @@ public class AuthController {
     ) {
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
-
+        // Добавляем всех пользователей программы на страницу для Select2 формы
         model.addAttribute("AllUsers", userRepository.findAllByIsDeletedNull());
         return "login";
     }
