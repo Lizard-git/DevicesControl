@@ -1,5 +1,6 @@
 package sfr.application.devicescontrol.controllers.settings_controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -13,15 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import sfr.application.devicescontrol.dto.UserDto;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.exceptions.UsersExceptions;
-import sfr.application.devicescontrol.services.AddressService;
-import sfr.application.devicescontrol.services.RoleService;
-import sfr.application.devicescontrol.services.UserService;
-import sfr.application.devicescontrol.services.UserTelbookService;
+import sfr.application.devicescontrol.services.*;
+
+import java.net.UnknownHostException;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping(value = "/settings/users")
 public class UserSettingsController {
+    private final HistoryService historyService;
     private final UserTelbookService userTelbookService;
     private final AddressService addressService;
     private final RoleService roleService;
@@ -44,8 +45,13 @@ public class UserSettingsController {
     }
 
     @PostMapping (value = {"/create"})
-    public String NewUser(@ModelAttribute("NewUser") @Valid UserDto userDto,
-                          BindingResult bindingResult, Model model) throws UsersExceptions {
+    public String NewUser(HttpServletRequest request,
+                          @ModelAttribute("NewUser") @Valid UserDto userDto,
+                          BindingResult bindingResult,
+                          Model model) throws UsersExceptions, UnknownHostException {
+        String clientIp = request.getRemoteAddr();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
         if(ObjectUtils.isEmpty(userDto.getPassword()) || userDto.getPassword().length() < 6) {
             bindingResult.addError(
                     new FieldError("NewUser",
@@ -54,18 +60,25 @@ public class UserSettingsController {
             );
         }
         if (bindingResult.hasErrors()) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
             model.addAttribute("User", userService.convert(user));
             return "settings/settings-user";
         }
         userService.save(userDto);
+        historyService.newHistoryInfo(
+                "Добавил нового пользователя",
+                clientIp,
+                user
+        );
         return "redirect:/settings/users?successfully=true";
     }
 
     @PostMapping (value = {"/change"})
-    public String ChangeUser(@ModelAttribute("User") @Valid UserDto userDto,
-                             BindingResult bindingResult) throws UsersExceptions {
+    public String ChangeUser(HttpServletRequest request,
+                             @ModelAttribute("User") @Valid UserDto userDto,
+                             BindingResult bindingResult) throws UsersExceptions, UnknownHostException {
+        String clientIp = request.getRemoteAddr();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
         if(userDto.getPassword().length() < 6 && !userDto.getPassword().isEmpty()) {
            bindingResult.addError(
                    new FieldError("NewUser",
@@ -77,18 +90,41 @@ public class UserSettingsController {
             return "settings/settings-user";
         }
         userService.change(userDto);
+        historyService.newHistoryInfo(
+                "Успешно изменил данные пользователя: " + userDto.getLogin(),
+                clientIp,
+                user
+        );
         return "redirect:/settings/users?successfully=true";
     }
 
     @PostMapping(value = {"/remove/{id}"})
-    public String RemoveUser(@PathVariable(name = "id") UserEntity user) throws UsersExceptions {
+    public String RemoveUser(HttpServletRequest request,
+                             @PathVariable(name = "id") UserEntity user) throws UsersExceptions, UnknownHostException {
+        String clientIp = request.getRemoteAddr();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity authUser = userService.getUserByLoginNotDeleted(auth.getName());
         userService.remove(user);
+        historyService.newHistoryInfo(
+                "Успешно пометил пользователя " + user.getLogin() + " как: 'Удаленный'",
+                clientIp,
+                authUser
+        );
         return "redirect:/settings/users?successfully=true";
     }
 
     @PostMapping(value = {"/delete/{id}"})
-    public String DeleteUser(@PathVariable(name = "id") UserEntity user) throws UsersExceptions {
+    public String DeleteUser(HttpServletRequest request,
+                             @PathVariable(name = "id") UserEntity user) throws UsersExceptions, UnknownHostException {
+        String clientIp = request.getRemoteAddr();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity authUser = userService.getUserByLoginNotDeleted(auth.getName());
         userService.delete(user);
+        historyService.newHistoryInfo(
+                "Успешно полностью удалил пользователя " + user.getLogin() + " из системы",
+                clientIp,
+                authUser
+        );
         return "redirect:/settings/users?successfully=true";
     }
 
@@ -106,18 +142,32 @@ public class UserSettingsController {
         model.addAttribute("Error", messageUI);
         model.addAttribute("NewUser", new UserDto());
         model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
-        model.addAttribute("AllAddress", addressService.getAll());
+        model.addAttribute("AllAddress", addressService.getAllAddress());
+        model.addAttribute("AllRoles", roleService.getAll());
+        model.addAttribute("AllUsers", userService.getAll());
+        return "settings/settings-user";
+    }
+
+    @ExceptionHandler(UnknownHostException.class)
+    public String UnknownHostException(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
+        model.addAttribute("User", userService.convert(user));
+        model.addAttribute("Error", "Ошибка ip адреса! Обратитесь к разработчикам!");
+        model.addAttribute("NewUser", new UserDto());
+        model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
+        model.addAttribute("AllAddress", addressService.getAllAddress());
         model.addAttribute("AllRoles", roleService.getAll());
         model.addAttribute("AllUsers", userService.getAll());
         return "settings/settings-user";
     }
 
     @ModelAttribute
-    public void addAllAddress(Model model) {
+    public void ModelFilling(Model model) {
         model.addAttribute("NewUser", new UserDto());
         model.addAttribute("Error", "");
         model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
-        model.addAttribute("AllAddress", addressService.getAll());
+        model.addAttribute("AllAddress", addressService.getAllAddress());
         model.addAttribute("AllRoles", roleService.getAll());
         model.addAttribute("AllUsers", userService.getAll());
     }

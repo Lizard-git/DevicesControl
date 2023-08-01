@@ -2,6 +2,7 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет ВТ</title>
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
@@ -12,7 +13,38 @@
 <nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/info')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Информационная страница')}"></div>
+        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Информация')}"></div>
+    <div class="card default-shadow mt-4">
+        <div class="card-header">
+            Обновления
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <ol>
+                    <li>Обновленно
+                        <ol>
+                            <li>sdfdsf</li>
+                            <li>sdfdsf</li>
+                        </ol>
+                    </li>
+                </ol>
+                <ol>
+                    <li>Обновленно
+                        <ol>
+                            <li>asdasd</li>
+                        </ol>
+                    </li>
+                </ol>
+                <ol>
+                    <li>Обновленно
+                        <ol>
+                            <li>sdfdsfsdf</li>
+                        </ol>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>

@@ -2,6 +2,7 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет ВТ</title>
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
@@ -12,7 +13,7 @@
 <nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки пользователя')}"></div>
+        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки')}"></div>
 
         <div th:replace="~{/fragments/settings-tabs.html::settings-tabs('/devices')}"></div>
     </div>
