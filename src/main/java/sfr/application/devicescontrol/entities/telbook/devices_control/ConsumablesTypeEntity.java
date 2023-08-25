@@ -12,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "settlements", schema = "devices_control")
-public class SettlementsEntity {
+@Table(name = "consumables_types", schema = "devices_control")
+public class ConsumablesTypeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,14 +22,11 @@ public class SettlementsEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "type", nullable = false)
-    private String type;
-
     @ManyToOne
-    @JoinColumn(name = "id_Region", nullable = false)
-    private RegionEntity region;
+    @JoinColumn(name = "id_Device_Type", nullable = false)
+    private DeviceTypeEntity deviceType;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "settlements", cascade = CascadeType.REMOVE)
-    private List<AddressEntity> address;
+    @OneToMany(mappedBy = "type", fetch = FetchType.LAZY)
+    private List<ConsumablesEntity> consumables;
 }

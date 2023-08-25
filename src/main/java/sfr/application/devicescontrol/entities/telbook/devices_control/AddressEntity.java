@@ -20,13 +20,13 @@ public class AddressEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "settlements")
+    @JoinColumn(name = "id_Settlements", nullable = false)
     private SettlementsEntity settlements;
 
     @Column(name = "street")
     private String street;
 
-    @Column(name = "house")
+    @Column(name = "house", nullable = false)
     private String house;
 
     @JsonIgnore

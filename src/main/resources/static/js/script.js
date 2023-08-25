@@ -1,4 +1,4 @@
-//navbar-toggle - true это открытое меню, а false - закрытое
+//navbar-toggle = true - это открытое меню, а false - закрытое
 $(document).ready(function () {
     if (window.innerWidth < 992.99) {
         localStorage.setItem("navbar-toggle", "false");
@@ -17,6 +17,12 @@ $(document).ready(function () {
             navbarToggle.addClass("navbarMobile");
             contentContainer.addClass("closeNavbar");
         }
+    }
+
+    let a = document.getElementsByClassName("list-status-type-device");
+
+    for (let i = 0; i < a.length; i++) {
+        getCountByStatus(a[i]);
     }
 });
 
@@ -68,10 +74,46 @@ function getSurnameAndMiddleNameAndName(targetObject) {
     $.ajax({
         type:'post',
         url:'/api/v1/users/get/' + targetObject.value,
-        success:function(result){// получаем ответ с сервера
+        success:function(result){
             surname.value = result.name.split(" ")[1];
             name.value = result.name.split(" ")[2];
             middleName.value = result.name.split(" ")[3];
+        }
+
+    })
+}
+
+function getUserByDepartment(targetObject) {
+    $.ajax({
+        type:'post',
+        url:'/api/v1/users/get/department/' + targetObject.value,
+        success:function(result){
+            $("#device-user-using-change").empty();
+            result.forEach(user => {
+                $("#device-user-using-change").append('<option value="'+user.id+'">'+user.name + ' ('+ user.domain +')' +'</option>');
+                return true;
+            })
+            if (result.length === 0) $("#device-user-using-change").append('<option value="0">Выбирите отдел для отображения пользователей...</option>')
+        }
+
+    })
+}
+
+async function getCountByStatus(ul) {
+    let id = ul.id;
+    $.ajax({
+        type:'post',
+        url:'/api/v1/devices/get/count/by/status/' + id,
+        success: await function(result){
+            $('#'+id).empty();
+            let map = new Map();
+            let keys = Object.keys(result);
+            for (const key of keys) {
+                map.set(key, result[key]);
+            }
+            map.forEach((value, key) => {
+                $('#'+id).append('<li> <p>' + key + '</p> <p>' + value + '</p> </li>')
+            })
         }
 
     })

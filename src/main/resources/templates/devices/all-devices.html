@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/data-tables/DataTables-1.13.5/css/dataTables.bootstrap.css}"/>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -14,15 +15,105 @@
 <main id="content-main">
     <div class="container-fluid">
         <div th:replace="~{/fragments/header-title-fragment.html::header-title('Все устройства')}"></div>
+        <div th:replace="~{/fragments/devices-tabs.html::devices-tabs('/all')}"></div>
+
+        <div class="table-responsive p-0 mt-4">
+            <table id="tableDevice" class="w-100 table table-striped align-items-center mb-0"
+                   data-sticky-header="true" data-sticky-header-offset-y="60">
+                <thead>
+                <tr>
+                    <th class="text-uppercase text- text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small>Тип устройства</small>
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small>Инвентарынй номер</small>
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small>Производитель</small>
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small>Модель</small>
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small>Месторасположение</small>
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small>Cтатус</small>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>
 <script type="text/javascript" th:src="@{/plugins/jquery/jquery-3.6.0.min.js}"></script>
-<script type="text/javascript" th:src="@{/plugins/select2/js/select2.min.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/data-tables/DataTables-1.13.5/js/jquery.dataTables.js}"></script>
+<script type="text/javascript" th:src="@{/plugins/data-tables/DataTables-1.13.5/js/dataTables.bootstrap5.js}"></script>
 <script>
     $(document).ready(function() {
-        $('.js-example-basic-single').select2();
+
+        let table = $('#tableDevice').DataTable({
+            language: {
+                url: '/plugins/data-tables/ru.json'
+            },
+            ajax: {
+                contentType: 'application/json',
+                url: '/api/v1/devices/get/all',
+                type: 'POST',
+                dataSrc: function (json) {
+                    let data = json.map(function (d) {
+                        let typeSettlements = d.address.settlements.type;
+                        let nameSettlements = d.address.settlements.name;
+                        let street = d.address.street;
+                        let house = d.address.house;
+                        let region = '(' + d.address.settlements.region.name + ' район)';
+                        d.address = typeSettlements + ' ' + nameSettlements + ' ' + street + ' ' + house + ' ' + region;
+                        if (d.manufacturer === null) {
+                            d.manufacturer = "Не указанно";
+                        } else {
+                            d.manufacturer = d.manufacturer.name;
+                        }
+                        if (d.model === "" || d.model === null) d.model = 'Не указанно';
+                        return d;
+                    })
+                    return data;
+                }
+            },
+
+            columns : [{
+                data : 'type.name'
+            }, {
+                data : 'inventoryNumber'
+            },  {
+                data : 'manufacturer'
+            },  {
+                data : 'model'
+            },  {
+                data : 'address'
+            },  {
+                data : 'status.name'
+            }],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).css( 'cursor', 'pointer' );
+                $(nRow).click(function(){
+                    window.location = '/devices/get/' + aData.id;
+                    return false;
+                });
+                $(nRow).on("mousedown", function(e) {
+                    if (e.which === 2) {
+                        window.open('/devices/get/' + aData.id) ;
+                        return false;
+                    }
+                });
+            }
+        });
+        table.buttons().container()
+            .appendTo( '#example_wrapper .col-md-6:eq(0)' );
     });
+
 </script>
 <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </body>

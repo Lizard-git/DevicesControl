@@ -50,7 +50,7 @@
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Ошибка</small>
                                 <input id="user-password-change" class="form-control" type="password" autocomplete="new-password" th:field="*{password}">
                             </div>
-                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="user-address-change">Адрес</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Ошибка</small>
                                 <select id="user-address-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{address}">
@@ -64,7 +64,7 @@
                                             }"></option>
                                 </select>
                             </div>
-                            <div sec:authorize="${hasAnyRole('Admin')}" class="input-form-group d-flex justify-content-between flex-column mb-4">
+                            <div sec:authorize="${hasAnyRole('Admin')}" class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="user-role-change">Роль</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Ошибка</small>
                                 <select id="user-role-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{role}">
@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <div class="card default-shadow mt-4">
+        <div sec:authorize="${hasAnyRole('Admin')}" class="card default-shadow mt-4">
             <div class="card-header">Создание пользователя</div>
             <div class="card-body card-body-custom">
                 <div class="alert alert-info mt-1" role="alert">
@@ -106,7 +106,7 @@
                 <form th:method="post" action="/settings/users/create" th:object="${NewUser}">
                     <div class="row">
                         <div class="col-12 col-lg-6">
-                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="user-login-create">Логин</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Ошибка</small>
                                 <select id="user-login-create" class="js-example-basic-single" style="width: 100% !important;" onchange="getSurnameAndMiddleNameAndName(this)" th:field="*{login}">
@@ -119,7 +119,7 @@
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Ошибка</small>
                                 <input id="user-password-create" class="form-control" type="password" autocomplete="new-password" th:field="*{password}">
                             </div>
-                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="user-address-create">Адрес</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Ошибка</small>
                                 <select id="user-address-create" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{address}">
@@ -133,7 +133,7 @@
                                             }"></option>
                                 </select>
                             </div>
-                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="user-role-create">Роль</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Ошибка</small>
                                 <select id="user-role-create" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{role}">
@@ -177,7 +177,7 @@
                         <th scope="col">Отчество</th>
                         <th scope="col">Роль</th>
                         <th scope="col">Район</th>
-                        <th scope="col">Действия</th>
+                        <th sec:authorize="${hasAnyRole('Admin')}" scope="col">Действия</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -188,7 +188,7 @@
                         <td th:text="${user.getMiddleName()}">1</td>
                         <td th:text="${user.getRole().getDescription()}">1</td>
                         <td th:text="${user.getAddress().getSettlements().getRegion().getName()}">1</td>
-                        <td class="d-flex ">
+                        <td sec:authorize="${hasAnyRole('Admin')}" class="d-flex ">
                             <form th:if="${user.getIsDeleted() == null}" th:method="post" th:action="'/settings/users/remove/' + ${user.getId()}">
                                 <button type="submit" class="btn btn-danger">Удалить</button>
                             </form>

@@ -1,5 +1,6 @@
 package sfr.application.devicescontrol.entities.telbook.devices_control;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -20,16 +21,13 @@ public class RegionEntity {
     @Column(name = "id")
     private Long id;
 
-    @Size(max = 5, message = "Значение кода региона должно быть не более 5 символов")
-    @NotEmpty(message = "Код региона не может быть пустым")
-    @Column(name = "code", nullable = false, unique = true, length = 5)
+    @Column(name = "code", nullable = false, unique = true, length = 10)
     private String code;
 
-    @Size(max = 3000, message = "Значение имени должно быть не менее 5 символов и не более 3000")
-    @NotEmpty(message = "Имя региона не может быть пустым")
-    @Column(name = "name", nullable = false, length = 3000)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "region")
     private List<SettlementsEntity> settlements;
 

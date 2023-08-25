@@ -1,5 +1,6 @@
 package sfr.application.devicescontrol.entities.telbook.devices_control;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,25 +35,27 @@ public class UserEntity {
     private String name;
 
     //Отчество
-    @Column(name = "middle_name")
+    @Column(name = "middle_Name")
     private String middleName;
 
     @ManyToOne
+    @JoinColumn(name = "id_Role", nullable = false)
     private RoleEntity role;
 
     @ManyToOne
-    @JoinColumn(name = "id_address", nullable = false)
+    @JoinColumn(name = "id_Address", nullable = false)
     private AddressEntity address;
 
-    @Column(name = "isDeleted")
+    @Column(name = "is_Deleted")
     private Date isDeleted;
 
-    @Column(name = "tabNumber", nullable = false)
+    @Column(name = "tab_Number", nullable = false, unique = true)
     private String tabNumber;
 
-    @Column(name = "domainName", nullable = false)
+    @Column(name = "domain_Name", nullable = false, unique = true)
     private String domainName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<HistoryEntity> history;
 }

@@ -48,23 +48,23 @@
                     <div class="row">
                         <div class="col-12 col-md-2 main-col">
                             <p>Всего устройств</p>
-                            <h4>20000</h4>
+                            <h4 th:text="${CountAllDevices}">AllCount</h4>
                         </div>
                         <div class="col-12 col-md-10">
                             <div class="row">
                                 <div class="col-12 col-md-12 col-xxl-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-4 card-info"><p><nobr>Эксплуатируется</nobr></p><h4>20000</h4></div>
-                                        <div class="col-12 col-md-4 card-info"><p><nobr>Настройка\Ремонт</nobr></p><h4>20000</h4></div>
-                                        <div class="col-12 col-md-4 card-info"><p><nobr>На складе</nobr></p><h4>20000</h4></div>
+                                        <div class="col-12 col-md-4 card-info"><p><nobr>Эксплуатируется</nobr></p><h4 th:text="${CountDevicesByStatus.get('Эксплуатируется')}">20000</h4></div>
+                                        <div class="col-12 col-md-4 card-info"><p><nobr>Настройка\Ремонт</nobr></p><h4 th:text="${CountDevicesByStatus.get('Настройка\Ремонт')}">20000</h4></div>
+                                        <div class="col-12 col-md-4 card-info"><p><nobr>На складе</nobr></p><h4 th:text="${CountDevicesByStatus.get('На складе')}">20000</h4></div>
                                     </div>
 
                                 </div>
                                 <div class="col-12 col-md-12 col-xxl-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-4 card-info"><p><nobr>В подразделении</nobr></p><h4>20000</h4></div>
-                                        <div class="col-12 col-md-4 card-info"><p><nobr>Утилизация</nobr></p><h4>20000</h4></div>
-                                        <div class="col-12 col-md-4 card-info"><p><nobr>Утилизировано</nobr></p><h4>20000</h4></div>
+                                        <div class="col-12 col-md-4 card-info"><p><nobr>В подразделении</nobr></p><h4 th:text="${CountDevicesByStatus.get('В подразделении')}">20000</h4></div>
+                                        <div class="col-12 col-md-4 card-info"><p><nobr>Утилизация</nobr></p><h4 th:text="${CountDevicesByStatus.get('Утилизация')}">20000</h4></div>
+                                        <div class="col-12 col-md-4 card-info"><p><nobr>Утилизировано</nobr></p><h4 th:text="${CountDevicesByStatus.get('Утилизировано')}">20000</h4></div>
                                     </div>
                                 </div>
                             </div>
@@ -107,48 +107,13 @@
             </div>
 
             <div class="row mt-4">
-                <div class="col-12 col-md-6 col-xl-3">
+                <div th:each="type: ${AllTypesDevice}" class="col-12 col-md-6 col-xl-3">
                     <div class="card bg-color-light-blue default-shadow mt-4">
                         <div class="card-header">
-                            <h6 class="m-0">Заголовок</h6>
+                            <h6 class="m-0" th:text="${type.getName()}">Заголовок</h6>
                         </div>
                         <div class="card-body">
-                            <ul class="list-status-type-device list-default">
-                                <li>
-                                    <p>Эксплуатируется</p>
-                                    <p>23423</p>
-                                </li>
-                                <li>
-                                    <p>Настройка\Ремонт</p>
-                                    <p>323</p>
-                                </li>
-                                <li>
-                                    <p>На складе</p>
-                                    <p>232</p>
-                                </li>
-                                <li>
-                                    <p>В подразделении</p>
-                                    <p>3233</p>
-                                </li>
-                                <li>
-                                    <p>Утилизация</p>
-                                    <p>23423</p>
-                                </li>
-                                <li>
-                                    <p>Утилизировано</p>
-                                    <p>2342</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-xl-3">
-                    <div class="card bg-color-light-blue default-shadow mt-4">
-                        <div class="card-header">
-                            <h6 class="m-0">Заголовок</h6>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-status-type-device list-default">
+                            <ul th:id="${type.getId()}" class="list-status-type-device list-default"> <!-- th:onload=""-->
                                 <li>
                                     <p>Эксплуатируется</p>
                                     <p>23423</p>

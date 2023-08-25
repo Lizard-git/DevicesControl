@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/plugins/select2/css/select2-bootstrap.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -40,7 +41,7 @@
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Ошибка</small>
                                 <input id="user-password-change" class="form-control" type="password" autocomplete="new-password" th:field="*{password}">
                             </div>
-                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label class="text-white" for="user-address-change">Адрес</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Ошибка</small>
                                 <select id="user-address-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{address}">
@@ -54,7 +55,7 @@
                                     }"></option>
                                 </select>
                             </div>
-                            <div class="input-form-group d-flex justify-content-between flex-column mb-4">
+                            <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label class="text-white" for="user-role-change">Роль</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Ошибка</small>
                                 <select id="user-role-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{role}">
@@ -95,12 +96,14 @@
 <script type="text/javascript" th:src="@{/plugins/select2/js/select2.min.js}"></script>
 <script>
     $(document).ready(function() {
-        $('.js-example-basic-single').select2();
+        $('.js-example-basic-single').select2({
+            theme: "bootstrap"
+        });
     });
-    $(".js-example-responsive").select2({
-        width: 'resolve',
-        maximumSelectionLength: 1// need to override the changed default
-    });
+    // $(".js-example-responsive").select2({
+    //     width: 'resolve',
+    //     maximumSelectionLength: 1// need to override the changed default
+    // });
 </script>
 <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </body>

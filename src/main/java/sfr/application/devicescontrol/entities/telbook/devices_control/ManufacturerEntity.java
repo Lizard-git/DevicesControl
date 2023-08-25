@@ -3,6 +3,7 @@ package sfr.application.devicescontrol.entities.telbook.devices_control;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import sfr.application.devicescontrol.enums.TypeEntity;
 
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "settlements", schema = "devices_control")
-public class SettlementsEntity {
+@Table(name = "manufacturer", schema = "devices_control")
+public class ManufacturerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,13 +24,12 @@ public class SettlementsEntity {
     private String name;
 
     @Column(name = "type", nullable = false)
-    private String type;
-
-    @ManyToOne
-    @JoinColumn(name = "id_Region", nullable = false)
-    private RegionEntity region;
+    @Enumerated(EnumType.STRING)
+    private TypeEntity typeColumn;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "settlements", cascade = CascadeType.REMOVE)
-    private List<AddressEntity> address;
+    @OneToMany(mappedBy = "manufacturer")
+    private List<DeviceEntity> devices;
+
+    // лист расходников
 }

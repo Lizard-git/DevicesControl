@@ -40,4 +40,21 @@ public class UserTelbookService {
     public UsersTelbookEntity getByDomain(String domainName) {
         return usersTelbookRepository.findByDomain(domainName);
     }
+
+    /**
+     * Получает весь список отделов из telbook
+     * @return List<String>
+     */
+    public List<String> getAllDepartment() {
+        return usersTelbookRepository.getAllDepartment();
+    }
+
+    /**
+     * Получаем всех пользователей конкретного отдела
+     * @param department - полное имя отдела
+     * @return List<UsersTelbookEntity>
+     */
+    public List<UsersTelbookEntity> getAllUserByDepartment(String department) {
+        return usersTelbookRepository.findAllByDepartment(department);
+    }
 }

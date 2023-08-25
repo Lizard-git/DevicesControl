@@ -1,19 +1,19 @@
 package sfr.application.devicescontrol.entities.telbook.devices_control;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import sfr.application.devicescontrol.enums.TypeMessagesHistory;
 
 import java.util.Date;
-
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "history", schema = "devices_control")
-public class HistoryEntity {
+@Table(name = "history_devices", schema = "devices_control")
+public class HistoryDeviceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,9 +22,6 @@ public class HistoryEntity {
     @Column(name = "text_Сhange", nullable = false, length = 1000)
     private String textChange;
 
-    @Column(name = "ip_Address", nullable = false)
-    private String ipAddress;
-
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TypeMessagesHistory type;
@@ -32,9 +29,10 @@ public class HistoryEntity {
     @Column(name = "date", nullable = false)
     private Date dataHistory;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "id_User", nullable = false)
-    private UserEntity user;
+    @JoinColumn(name = "id_Device", nullable = false)
+    private DeviceEntity device;
 
     @Column(name = "dop_Info")
     private String dopInfo;

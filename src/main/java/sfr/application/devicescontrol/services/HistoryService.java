@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sfr.application.devicescontrol.entities.telbook.devices_control.HistoryEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
+import sfr.application.devicescontrol.enums.TypeMessagesHistory;
 import sfr.application.devicescontrol.repositories.telbook.device_control.HistoryRepository;
 
 import java.net.InetAddress;
@@ -37,7 +38,7 @@ public class HistoryService {
      * @param dopInfo - Дополнительная информация для записи
      * @throws UnknownHostException - Ошибка получения ip адреса
      */
-    public void newHistory(String change, String ipAddress, String type, UserEntity user, String dopInfo) throws UnknownHostException {
+    public void newHistory(String change, String ipAddress, TypeMessagesHistory type, UserEntity user, String dopInfo) throws UnknownHostException {
         ipAddress = ipAddressValidator(ipAddress);
         historyRepository.save(HistoryEntity.builder()
                         .textChange(change)
@@ -56,7 +57,7 @@ public class HistoryService {
      * @param user - пользователь, который совершает действие
      * @throws UnknownHostException - Ошибка получения ip адреса
      */
-    public void newHistory(String change, String ipAddress, String type, UserEntity user) throws UnknownHostException {
+    public void newHistory(String change, String ipAddress, TypeMessagesHistory type, UserEntity user) throws UnknownHostException {
         ipAddress = ipAddressValidator(ipAddress);
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
@@ -80,7 +81,7 @@ public class HistoryService {
                 .dataHistory(new Date())
                 .user(user)
                 .ipAddress(ipAddress)
-                .type("Error")
+                .type(TypeMessagesHistory.Error)
                 .build());
     }
 
@@ -98,7 +99,7 @@ public class HistoryService {
                 .dataHistory(new Date())
                 .user(user)
                 .ipAddress(ipAddress)
-                .type("Info")
+                .type(TypeMessagesHistory.Info)
                 .build());
     }
 
@@ -116,7 +117,7 @@ public class HistoryService {
                 .dataHistory(new Date())
                 .user(user)
                 .ipAddress(ipAddress)
-                .type("Warning")
+                .type(TypeMessagesHistory.Warning)
                 .build());
     }
 

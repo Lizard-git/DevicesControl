@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <ul th:fragment="devices-tabs(active)" class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${active == '/all'} ? 'active'" aria-current="page" href="/devices/all">Все устройства</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${active == '/new'} ? 'active'" href="/devices/new">Добавление</a>
+        </li>
+    </ul>
+</body>
+</html>

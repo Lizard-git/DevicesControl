@@ -13,4 +13,6 @@ public interface UsersTelbookRepository extends JpaRepository<UsersTelbookEntity
     UsersTelbookEntity findByDomainAndTubNumber(String domain, String tubNumber);
 
     UsersTelbookEntity findByDomain(String domain);
+
+    List<UsersTelbookEntity> findAllByDepartment(String department);
 }

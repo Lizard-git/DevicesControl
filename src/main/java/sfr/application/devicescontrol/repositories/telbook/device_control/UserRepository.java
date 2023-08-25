@@ -1,10 +1,12 @@
 package sfr.application.devicescontrol.repositories.telbook.device_control;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 
 import java.util.List;
 
+@Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     /**
      * Получит пользователя по его login
