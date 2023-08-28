@@ -66,8 +66,7 @@ public class UserSettingsController {
         userService.save(userDto);
         historyService.newHistoryInfo(
                 "Добавил нового пользователя",
-                clientIp,
-                user
+                clientIp
         );
         return "redirect:/settings/users?successfully=true";
     }
@@ -92,8 +91,7 @@ public class UserSettingsController {
         userService.change(userDto);
         historyService.newHistoryInfo(
                 "Успешно изменил данные пользователя: " + userDto.getLogin(),
-                clientIp,
-                user
+                clientIp
         );
         return "redirect:/settings/users?successfully=true";
     }
@@ -107,8 +105,7 @@ public class UserSettingsController {
         userService.remove(user);
         historyService.newHistoryInfo(
                 "Успешно пометил пользователя " + user.getLogin() + " как: 'Удаленный'",
-                clientIp,
-                authUser
+                clientIp
         );
         return "redirect:/settings/users?successfully=true";
     }
@@ -122,8 +119,7 @@ public class UserSettingsController {
         userService.delete(user);
         historyService.newHistoryInfo(
                 "Успешно полностью удалил пользователя " + user.getLogin() + " из системы",
-                clientIp,
-                authUser
+                clientIp
         );
         return "redirect:/settings/users?successfully=true";
     }
@@ -142,7 +138,7 @@ public class UserSettingsController {
         model.addAttribute("Error", messageUI);
         model.addAttribute("NewUser", new UserDto());
         model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
-        model.addAttribute("AllAddress", addressService.getAllAddress());
+        model.addAttribute("AllAddress", addressService.getAll());
         model.addAttribute("AllRoles", roleService.getAll());
         model.addAttribute("AllUsers", userService.getAll());
         return "settings/settings-user";
@@ -156,7 +152,7 @@ public class UserSettingsController {
         model.addAttribute("Error", "Ошибка ip адреса! Обратитесь к разработчикам!");
         model.addAttribute("NewUser", new UserDto());
         model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
-        model.addAttribute("AllAddress", addressService.getAllAddress());
+        model.addAttribute("AllAddress", addressService.getAll());
         model.addAttribute("AllRoles", roleService.getAll());
         model.addAttribute("AllUsers", userService.getAll());
         return "settings/settings-user";
@@ -167,7 +163,7 @@ public class UserSettingsController {
         model.addAttribute("NewUser", new UserDto());
         model.addAttribute("Error", "");
         model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
-        model.addAttribute("AllAddress", addressService.getAllAddress());
+        model.addAttribute("AllAddress", addressService.getAll());
         model.addAttribute("AllRoles", roleService.getAll());
         model.addAttribute("AllUsers", userService.getAll());
     }

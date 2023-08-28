@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import sfr.application.devicescontrol.entities.telbook.devices_control.StatusEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.entities.telbook.prov_ter_org.UsersTelbookEntity;
-import sfr.application.devicescontrol.enums.TypeEntity;
 import sfr.application.devicescontrol.services.DeviceService;
-import sfr.application.devicescontrol.services.StatusService;
 import sfr.application.devicescontrol.services.UserService;
 import sfr.application.devicescontrol.services.UserTelbookService;
 
@@ -26,7 +24,7 @@ public class HomeController {
     private final UserTelbookService userTelbookService;
     private final DeviceService deviceService;
     @GetMapping(value = {"", "/", "/home"})
-    public String PageHome(Model model) {
+    public String showHomePage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());

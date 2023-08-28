@@ -3,17 +3,13 @@ package sfr.application.devicescontrol.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import sfr.application.devicescontrol.dto.AddressDto;
 import sfr.application.devicescontrol.dto.DeviceDTO;
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceEntity;
-import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.entities.telbook.prov_ter_org.UsersTelbookEntity;
 import sfr.application.devicescontrol.enums.TypeEntity;
 import sfr.application.devicescontrol.exceptions.DeviceException;
@@ -58,16 +54,15 @@ public class DevicesController {
                             BindingResult bindingResult,
                             Model model) throws UnknownHostException, DeviceException {
         String clientIp = request.getRemoteAddr();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
         if (bindingResult.hasErrors()) {
             return "devices/new-device";
         }
         deviceService.save(deviceDTO);
         historyService.newHistoryInfo(
                 "Сохранил новое устройство с инвентарным номером: " + deviceDTO.getInventoryNumber(),
-                clientIp,
-                user
+                clientIp
         );
         return "redirect:/devices/new?successfully=true";
     }
@@ -101,8 +96,6 @@ public class DevicesController {
                                BindingResult bindingResult,
                                Model model) throws UnknownHostException, DeviceException {
         String clientIp = request.getRemoteAddr();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
         if (bindingResult.hasErrors()) {
             List<UsersTelbookEntity> userByDepartment;
             if (ObjectUtils.isEmpty(device.getUserUsing())) {
@@ -118,8 +111,7 @@ public class DevicesController {
         deviceService.change(deviceDTO);
         historyService.newHistoryInfo(
                 "Изменил устройство с ID: " + device.getId(),
-                clientIp,
-                user
+                clientIp
         );
 
 
@@ -138,7 +130,7 @@ public class DevicesController {
         }
         model.addAttribute("Error", messageUI);
         model.addAttribute("Successfully", false);
-        model.addAttribute("AllAddress", addressService.getAllAddress());
+        model.addAttribute("AllAddress", addressService.getAll());
         model.addAttribute("AllTypeDevice", deviceService.getAllTypesDevices());
         model.addAttribute("AllDepartments", userTelbookService.getAllDepartment());
         model.addAttribute("AllManufacturer", manufacturerService.getAllByType(TypeEntity.device));
@@ -156,7 +148,7 @@ public class DevicesController {
     @ModelAttribute
     public void ModelFilling(Model model) {
         model.addAttribute("Error", "");
-        model.addAttribute("AllAddress", addressService.getAllAddress());
+        model.addAttribute("AllAddress", addressService.getAll());
         model.addAttribute("AllTypeDevice", deviceService.getAllTypesDevices());
         model.addAttribute("AllDepartments", userTelbookService.getAllDepartment());
         model.addAttribute("AllManufacturer", manufacturerService.getAllByType(TypeEntity.device));
