@@ -3,19 +3,16 @@ package sfr.application.devicescontrol.controllers.settings_controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import sfr.application.devicescontrol.dto.AddressDto;
 import sfr.application.devicescontrol.entities.telbook.devices_control.AddressEntity;
-import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.exceptions.AddressException;
 import sfr.application.devicescontrol.services.AddressService;
-import sfr.application.devicescontrol.services.HistoryService;
-import sfr.application.devicescontrol.services.UserService;
+import sfr.application.devicescontrol.services.SettlementsService;
+import sfr.application.devicescontrol.utils.mapers.AddressConverter;
 
 import java.net.UnknownHostException;
 
@@ -23,126 +20,76 @@ import java.net.UnknownHostException;
 @AllArgsConstructor
 @RequestMapping(value = "/settings/address")
 public class AddressSettingsController {
-    private final HistoryService historyService;
     private final AddressService addressService;
-    private final UserService userService;
+    private final SettlementsService settlementsService;
+
     @GetMapping(value = {"", "/"})
-    public String PageAddress(
+    public String showPageAddress(
             @RequestParam(required = false, name = "successfully", defaultValue = "false") Boolean successfully,
-            Model model) {
-        model.addAttribute("Successfully", successfully);
-        return "settings/settings-address";
+            Model model
+    ) {
+        return showPage(model, "", new AddressDto(), successfully);
     }
 
     @GetMapping(value = {"/{id}"})
-    public String PageChangeAddress(@PathVariable(name = "id") AddressEntity address, Model model) {
-        model.addAttribute("Address", addressService.convert(address));
+    public String showPageChangeAddress(@PathVariable(name = "id") AddressEntity address, Model model)
+    {
+        AddressConverter converter = new AddressConverter();
+        model.addAttribute("Address", converter.convertToDto(address));
         return "settings/settings-change-address";
     }
 
     @PostMapping(value = {"/save"})
-    public String NewAddress(HttpServletRequest request,
-                             @ModelAttribute("NewAddress") @Valid AddressDto addressDto,
-                             BindingResult bindingResult) throws AddressException, UnknownHostException {
-        String clientIp = request.getRemoteAddr();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
+    public String NewAddress(
+            HttpServletRequest request,
+            @ModelAttribute("NewAddress") @Valid AddressDto addressDto,
+            BindingResult bindingResult,
+            Model model
+    ) throws AddressException, UnknownHostException {
         if (bindingResult.hasErrors()) {
-            return "settings/settings-address";
+            return showPage(model, "", addressDto, false);
         }
-        addressService.saveAddress(addressDto);
-        historyService.newHistoryInfo(
-                "Добавил новый адрес в программу",
-                clientIp,
-                user
-        );
+        addressService.save(addressDto, request.getRemoteAddr());
         return "redirect:/settings/address?successfully=true";
     }
 
     @PostMapping(value = {"/change"})
-    public String ChangeAddress(HttpServletRequest request,
-                                @ModelAttribute("Address") @Valid AddressDto addressDto,
-                                BindingResult bindingResult) throws AddressException, UnknownHostException {
-        String clientIp = request.getRemoteAddr();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
+    public String ChangeAddress(
+            HttpServletRequest request,
+            @ModelAttribute("Address") @Valid AddressDto addressDto,
+            BindingResult bindingResult
+    ) throws AddressException, UnknownHostException {
         if (bindingResult.hasErrors()) {
-            return "settings/settings-address";
+            return "settings/settings-change-address";
         }
-        addressService.changeAddress(addressDto);
-        historyService.newHistoryInfo(
-                "Изменил адрес с ID: " + addressDto.getId(),
-                clientIp,
-                user
-        );
+        addressService.change(addressDto, request.getRemoteAddr());
         return "redirect:/settings/address?successfully=true";
     }
 
     @PostMapping(value = {"/delete/{id}"})
-    public String DeleteAddress(HttpServletRequest request,
-                                @PathVariable(name = "id") AddressEntity address, Model model) throws AddressException, UnknownHostException {
-        String clientIp = request.getRemoteAddr();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
-        //Делаем все в руки пользователя. Если надо удалить то пускай переновсит всех пользователей и устройства с
-        // этого адреса, а тут просто выведим ем что удаление невозможно т.к. по адресу что то находится
-        if (address.getUsers().size() == 0) {// добавить проверку девайсов И расходников
-            addressService.deleteAddress(address);
-            historyService.newHistoryInfo(
-                    "Успешное удаление адреса: " + address.getId() + ", " + address.getStreet() + ", " + address.getHouse(),
-                    clientIp,
-                    user
-            );
-        } else {
-            historyService.newHistoryError(
-                    "Пытался удалит адрес: " +
-                            address.getId() + ", " +
-                            address.getStreet() + ", " +
-                            address.getHouse() +
-                            " по которому в программе что то расположенно",
-                    clientIp,
-                    user
-            );
-            model.addAttribute("Error",
-                    "Для удаления необходимо удалить/переместить все " +
-                            "что находится по этому адресу (Пользователи, Устройства, Расходники)");
-            return "settings/settings-address";
-        }
+    public String DeleteAddress(
+            HttpServletRequest request,
+            @PathVariable(name = "id") AddressEntity address
+    ) throws AddressException, UnknownHostException {
+        addressService.delete(address, request.getRemoteAddr());
         return "redirect:/settings/address?successfully=true";
     }
 
-    @ExceptionHandler(AddressException.class)
-    public String AddressException(AddressException e, Model model) {
-        String messageUI;
-        switch (e.getMessage()) {
-            case "Address save error" -> messageUI = "Ошибка сохранения!";
-            case "Address change error" -> messageUI = "Ошибка изменения!";
-            case "Error deleted" -> messageUI = "Не удалось удалить адрес!";
-            default -> messageUI = "Непредвиденная ошибка! Обратитесь к разработчикам!";
-        }
-        model.addAttribute("Successfully", false);
-        model.addAttribute("NewAddress", new AddressDto());
-        model.addAttribute("AllSettlements", addressService.getAllSettlements());
-        model.addAttribute("AllAddress", addressService.getAllAddress());
-        model.addAttribute("Error", messageUI);
-        return "settings/settings-address";
-    }
-
-    @ExceptionHandler(UnknownHostException.class)
-    public String UnknownHostException(Model model) {
-        model.addAttribute("Successfully", false);
-        model.addAttribute("NewAddress", new AddressDto());
-        model.addAttribute("AllSettlements", addressService.getAllSettlements());
-        model.addAttribute("AllAddress", addressService.getAllAddress());
-        model.addAttribute("Error", "Ошибка ip адреса! Обратитесь к разработчикам!");
-        return "settings/settings-address";
+    @RequestMapping(value = {"/error"})
+    public String showPageErrors(@ModelAttribute("Error") String message, Model model) {
+        return showPage(model, message, new AddressDto(), false);
     }
 
     @ModelAttribute
     public void ModelFilling(Model model) {
-        model.addAttribute("Error", "");
-        model.addAttribute("AllSettlements", addressService.getAllSettlements());
-        model.addAttribute("AllAddress", addressService.getAllAddress());
-        model.addAttribute("NewAddress", new AddressDto());
+        model.addAttribute("AllSettlements", settlementsService.getAllSettlements());
+        model.addAttribute("AllAddress", addressService.getAll());
+    }
+
+    private String showPage(Model model, String errorMessage, AddressDto addressDto, boolean successfully) {
+        model.addAttribute("Error", errorMessage);
+        model.addAttribute("NewAddress", addressDto);
+        model.addAttribute("Successfully", successfully);
+        return "settings/settings-address";
     }
 }
