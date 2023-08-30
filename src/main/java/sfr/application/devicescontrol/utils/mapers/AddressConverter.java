@@ -5,7 +5,7 @@ import sfr.application.devicescontrol.dto.AddressDto;
 import sfr.application.devicescontrol.entities.telbook.devices_control.AddressEntity;
 
 public class AddressConverter {
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public AddressConverter() {
         this.modelMapper = new ModelMapper();

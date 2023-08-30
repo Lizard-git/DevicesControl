@@ -22,8 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(value = "/devices")
 public class DevicesController {
-    private final HistoryService historyService;
-    private final UserService userService;
+
     private final AddressService addressService;
     private final DeviceService deviceService;
     private final UserTelbookService userTelbookService;
@@ -60,10 +59,10 @@ public class DevicesController {
             return "devices/new-device";
         }
         deviceService.save(deviceDTO);
-        historyService.newHistoryInfo(
-                "Сохранил новое устройство с инвентарным номером: " + deviceDTO.getInventoryNumber(),
-                clientIp
-        );
+//        historyService.newHistoryInfo(
+//                "Сохранил новое устройство с инвентарным номером: " + deviceDTO.getInventoryNumber(),
+//                clientIp
+//        );
         return "redirect:/devices/new?successfully=true";
     }
 
@@ -109,10 +108,10 @@ public class DevicesController {
             return "devices/device";
         }
         deviceService.change(deviceDTO);
-        historyService.newHistoryInfo(
-                "Изменил устройство с ID: " + device.getId(),
-                clientIp
-        );
+//        historyService.newHistoryInfo(
+//                "Изменил устройство с ID: " + device.getId(),
+//                clientIp
+//        );
 
 
         return "redirect:/devices/get/" + device.getId() + "?successfully=true";
@@ -130,7 +129,7 @@ public class DevicesController {
         }
         model.addAttribute("Error", messageUI);
         model.addAttribute("Successfully", false);
-        model.addAttribute("AllAddress", addressService.getAll());
+        //model.addAttribute("AllAddress", addressService.getAll());
         model.addAttribute("AllTypeDevice", deviceService.getAllTypesDevices());
         model.addAttribute("AllDepartments", userTelbookService.getAllDepartment());
         model.addAttribute("AllManufacturer", manufacturerService.getAllByType(TypeEntity.device));

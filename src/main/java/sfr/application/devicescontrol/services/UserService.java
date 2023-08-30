@@ -2,14 +2,17 @@ package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import sfr.application.devicescontrol.configs.properties.UserMessagesProperties;
 import sfr.application.devicescontrol.dto.UserDto;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.exceptions.UsersExceptions;
 import sfr.application.devicescontrol.repositories.telbook.device_control.UserRepository;
 
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +23,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserTelbookService userTelbookService;
     private final PasswordEncoder passwordEncoder;
+    private final HistoryService historyService;
+
+    @Autowired
+    private UserMessagesProperties userMessagesProperties;
 
     /**
      * Вернет не удаленного пользователя по его login
@@ -41,42 +48,100 @@ public class UserService {
     /**
      * Создает нового пользователя
      * @param userDto - пользовательские данные
-     * @throws UsersExceptions - ошибка сохранения, скорее всего такой пользователь уже существует
+     * @param ipAddress - ip адрес пользователя
+     * @throws UsersExceptions - Ошибка сохранения, скорее всего такой пользователь уже существует.
+     * @throws UnknownHostException - Ошибка получения ip адреса.
      */
-    public void save(UserDto userDto) throws UsersExceptions {
+    public void save(UserDto userDto, String ipAddress) throws UsersExceptions, UnknownHostException {
+        if (!ObjectUtils.isEmpty(userDto.getId())) {
+            historyService.newHistoryWarning(
+                    userMessagesProperties.getAlreadyExistsMessage(),
+                    ipAddress
+            );
+            throw new UsersExceptions("Such user already exists");
+        }
+        if (!ObjectUtils.isEmpty(userRepository.findByLogin(userDto.getLogin()))) {
+            historyService.newHistoryWarning(
+                    userMessagesProperties.getAlreadyExistsMessage(),
+                    ipAddress
+            );
+            throw new UsersExceptions("Such user already exists");
+        }
         try {
             userRepository.save(convert(userDto));
         } catch (Exception e) {
-            throw new UsersExceptions("Such user already exists");
+            historyService.newHistoryError(
+                    userMessagesProperties.getErrorAddMessage(),
+                    ipAddress
+            );
+            throw new UsersExceptions("Save error user");
         }
+        historyService.newHistoryInfo(
+                userMessagesProperties.getSuccessAddMessage(),
+                ipAddress
+        );
     }
 
     /**
      * Изменяет пользователя
-     * @param userDto - новые пользовательские данные
-     * @throws UsersExceptions - ошибка изменения
+     * @param userDto - пользовательские данные
+     * @param ipAddress - ip адрес пользователя
+     * @throws UsersExceptions - Ошибка сохранения, скорее всего такой пользователь уже существует.
+     * @throws UnknownHostException - Ошибка получения ip адреса.
      */
-    public void change(UserDto userDto) throws UsersExceptions {
-        try {
-            UserEntity user = userRepository.getReferenceById(userDto.getId());
-            userRepository.save(merger(userDto, user));
-        } catch (Exception e) {
+    public void change(UserDto userDto, String ipAddress) throws UsersExceptions, UnknownHostException {
+        if (ObjectUtils.isEmpty(userDto.getId())) {
+            historyService.newHistoryWarning(
+                    userMessagesProperties.getErrorChangeMessage(),
+                    ipAddress
+            );
             throw new UsersExceptions("Failed to change user");
         }
+        UserEntity user = userRepository.getReferenceById(userDto.getId());
+        if (ObjectUtils.isEmpty(user)) {
+            historyService.newHistoryWarning(
+                    userMessagesProperties.getErrorChangeMessage(),
+                    ipAddress
+            );
+            throw new UsersExceptions("Failed to change user");
+        }
+        try {
+            userRepository.save(merger(userDto, user));
+        } catch (Exception e) {
+            historyService.newHistoryError(
+                    userMessagesProperties.getErrorChangeMessage(),
+                    ipAddress
+            );
+            throw new UsersExceptions("Failed to change user");
+        }
+        historyService.newHistoryInfo(
+                userMessagesProperties.getSuccessChangeMessage(),
+                ipAddress
+        );
     }
 
     /**
-     * Удаление пользователя (пометкой о удалении)
-     * @param user - удаляемый пользователь
-     * @throws UsersExceptions - ошибка удаления
+     * Удаление пользователя (пометкой об удалении)
+     * @param user - пользователь
+     * @param ipAddress - ip адрес пользователя
+     * @throws UsersExceptions - Ошибка сохранения, скорее всего такой пользователь уже существует.
+     * @throws UnknownHostException - Ошибка получения ip адреса.
      */
-    public void remove(UserEntity user) throws UsersExceptions {
+    public void remove(UserEntity user, String ipAddress) throws UsersExceptions, UnknownHostException {
         try {
             user.setIsDeleted(new Date());
             userRepository.save(user);
         } catch (Exception e) {
+            historyService.newHistoryError(
+                    userMessagesProperties.getErrorChangeMessage(),
+                    ipAddress
+            );
             throw new UsersExceptions("Failed to remove user");
         }
+        historyService.newHistoryInfo(
+                userMessagesProperties.getSuccessRemovedMessage(),
+                ipAddress
+        );
     }
 
     /**
@@ -84,12 +149,20 @@ public class UserService {
      * @param user - удаляемый пользователь
      * @throws UsersExceptions - ошибка удаления
      */
-    public void delete(UserEntity user) throws UsersExceptions {
+    public void delete(UserEntity user, String ipAddress) throws UsersExceptions, UnknownHostException {
         try {
             userRepository.delete(user);
         } catch (Exception e) {
+            historyService.newHistoryError(
+                    userMessagesProperties.getErrorDeleteMessage(),
+                    ipAddress
+            );
             throw new UsersExceptions("Failed to delete user");
         }
+        historyService.newHistoryInfo(
+                userMessagesProperties.getSuccessDeletedMessage(),
+                ipAddress
+        );
     }
 
     /**

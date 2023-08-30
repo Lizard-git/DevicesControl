@@ -4,13 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import sfr.application.devicescontrol.entities.telbook.devices_control.HistoryEntity;
-import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.enums.TypeMessagesHistory;
 import sfr.application.devicescontrol.repositories.telbook.device_control.HistoryRepository;
-import sfr.application.devicescontrol.utils.IpAddressVerificationUtils;
+import sfr.application.devicescontrol.utils.UtilsMethods;
 
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -21,8 +19,7 @@ import java.util.List;
 @Slf4j
 public class HistoryService {
     private final HistoryRepository historyRepository;
-    private final UserService userService;
-
+    private final SecurityService securityService;
     /**
      * Получает всю историяю из базы данных
      * @return List<HistoryEntity>
@@ -41,14 +38,6 @@ public class HistoryService {
     }
 
     /**
-     * Метод для получения текущего пользователя сессии
-     * @return UserEntity
-     */
-    private UserEntity getCurrantUser() {
-        return userService.getUserByLoginNotDeleted(SecurityContextHolder.getContext().getAuthentication().getName());
-    }
-
-    /**
      * Добавляет новую запись истории
      * @param change - изменения
      * @param ipAddress - ip адресс с которого производятся изменения
@@ -60,8 +49,8 @@ public class HistoryService {
         historyRepository.save(HistoryEntity.builder()
                         .textChange(change)
                         .dataHistory(new Date())
-                        .user(getCurrantUser())
-                        .ipAddress(IpAddressVerificationUtils.ipAddressValidator(ipAddress))
+                        .user(securityService.getCurrentUser())
+                        .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
                         .type(type)
                         .dopInfo(dopInfo)
                         .build());
@@ -78,8 +67,8 @@ public class HistoryService {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
-                .user(getCurrantUser())
-                .ipAddress(IpAddressVerificationUtils.ipAddressValidator(ipAddress))
+                .user(securityService.getCurrentUser())
+                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
                 .type(type)
                 .build());
     }
@@ -94,8 +83,8 @@ public class HistoryService {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
-                .user(getCurrantUser())
-                .ipAddress(IpAddressVerificationUtils.ipAddressValidator(ipAddress))
+                .user(securityService.getCurrentUser())
+                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
                 .type(TypeMessagesHistory.Error)
                 .build());
     }
@@ -110,8 +99,8 @@ public class HistoryService {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
-                .user(getCurrantUser())
-                .ipAddress(IpAddressVerificationUtils.ipAddressValidator(ipAddress))
+                .user(securityService.getCurrentUser())
+                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
                 .type(TypeMessagesHistory.Info)
                 .build());
     }
@@ -126,8 +115,8 @@ public class HistoryService {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
-                .user(getCurrantUser())
-                .ipAddress(IpAddressVerificationUtils.ipAddressValidator(ipAddress))
+                .user(securityService.getCurrentUser())
+                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
                 .type(TypeMessagesHistory.Warning)
                 .build());
     }

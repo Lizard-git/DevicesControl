@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sfr.application.devicescontrol.exceptions.AddressException;
+import sfr.application.devicescontrol.exceptions.UsersExceptions;
 
 import java.net.UnknownHostException;
 
@@ -22,6 +23,18 @@ public class ExceptionController {
         }
         redirectAttributes.addFlashAttribute("Error", message);
         return "redirect:/settings/address/error";
+    }
+
+    @ExceptionHandler(UsersExceptions.class)
+    public String UserException(UsersExceptions e, RedirectAttributes redirectAttributes) {
+        String message;
+        switch (e.getMessage()) {
+            case "Such user already exists" -> message = "Такой пользователь уже существует!";
+            case "Failed to change user" -> message = "Не удалось изменить пользователя";
+            default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам";
+        }
+        redirectAttributes.addFlashAttribute("Error", message);
+        return "settings/settings-user";
     }
 
     @ExceptionHandler(UnknownHostException.class)
