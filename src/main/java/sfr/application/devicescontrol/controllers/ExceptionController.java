@@ -34,7 +34,7 @@ public class ExceptionController {
             default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам";
         }
         redirectAttributes.addFlashAttribute("Error", message);
-        return "settings/settings-user";
+        return "redirect:/settings/users/error";
     }
 
     @ExceptionHandler(UnknownHostException.class)

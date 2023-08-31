@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      * @return UserEntity
      */
     List<UserEntity> findAllByIsDeletedNull();
+
+    UserEntity findByDomainName(String domainName);
 }

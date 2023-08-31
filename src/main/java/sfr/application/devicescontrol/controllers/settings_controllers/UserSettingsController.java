@@ -51,7 +51,8 @@ public class UserSettingsController {
     public String createUser(
             HttpServletRequest request,
             @ModelAttribute("NewUser") @Valid UserDto userDto,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Model model
     ) throws UsersExceptions, UnknownHostException {
         if(ObjectUtils.isEmpty(userDto.getPassword()) || userDto.getPassword().length() < 6) {
             bindingResult.addError(
@@ -61,6 +62,7 @@ public class UserSettingsController {
             );
         }
         if (bindingResult.hasErrors()) {
+            model.addAttribute("Error", "");
             return "settings/settings-user";
         }
         userService.save(userDto, request.getRemoteAddr());
@@ -71,7 +73,8 @@ public class UserSettingsController {
     public String changeUser(
             HttpServletRequest request,
             @ModelAttribute("User") @Valid UserDto userDto,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Model model
     ) throws UsersExceptions, UnknownHostException {
         if(userDto.getPassword().length() < 6 && !userDto.getPassword().isEmpty()) {
            bindingResult.addError(
@@ -81,6 +84,7 @@ public class UserSettingsController {
            );
         }
         if (bindingResult.hasErrors()) {
+            model.addAttribute("Error", "");
             return "settings/settings-user";
         }
         userService.change(userDto, request.getRemoteAddr());
@@ -126,6 +130,5 @@ public class UserSettingsController {
         model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
         model.addAttribute("AllUsers", userService.getAll());
         model.addAttribute("NewUser", new UserDto());
-        model.addAttribute("Error", "");
     }
 }

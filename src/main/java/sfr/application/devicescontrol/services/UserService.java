@@ -67,6 +67,13 @@ public class UserService {
             );
             throw new UsersExceptions("Such user already exists");
         }
+        if (!ObjectUtils.isEmpty(userRepository.findByDomainName(userDto.getLogin()))) {
+            historyService.newHistoryWarning(
+                    userMessagesProperties.getAlreadyExistsMessage(),
+                    ipAddress
+            );
+            throw new UsersExceptions("Such user already exists");
+        }
         try {
             userRepository.save(convert(userDto));
         } catch (Exception e) {
