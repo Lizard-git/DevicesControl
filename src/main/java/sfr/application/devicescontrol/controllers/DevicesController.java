@@ -35,12 +35,11 @@ public class DevicesController {
     }
 
     @GetMapping(value = {"/new"})
-    public String PageNewDevice(@RequestParam(
-                                    required = false,
-                                    name = "successfully",
-                                    defaultValue = "false"
-                                ) Boolean successfully,
-                                Model model) {
+    public String PageNewDevice(
+            @RequestParam(required = false, name = "successfully", defaultValue = "false") Boolean successfully,
+            Model model
+    ) {
+        model.addAttribute("Error", "");
         model.addAttribute("Successfully", successfully);
         model.addAttribute("Device", new DeviceDTO());
         model.addAttribute("AllUsersTelbookByDepartmen", userTelbookService.getAll());
@@ -48,32 +47,26 @@ public class DevicesController {
     }
 
     @PostMapping(value = {"/new"})
-    public String NewDevice(HttpServletRequest request,
-                            @ModelAttribute(name = "Device") @Valid DeviceDTO deviceDTO,
-                            BindingResult bindingResult,
-                            Model model) throws UnknownHostException, DeviceException {
-        String clientIp = request.getRemoteAddr();
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        UserEntity user = userService.getUserByLoginNotDeleted(auth.getName());
+    public String NewDevice(
+            HttpServletRequest request,
+            @ModelAttribute(name = "Device") @Valid DeviceDTO deviceDTO,
+            BindingResult bindingResult,
+            Model model
+    ) throws UnknownHostException, DeviceException {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("Error", "");
             return "devices/new-device";
         }
-        deviceService.save(deviceDTO);
-//        historyService.newHistoryInfo(
-//                "Сохранил новое устройство с инвентарным номером: " + deviceDTO.getInventoryNumber(),
-//                clientIp
-//        );
+        deviceService.save(deviceDTO, request.getRemoteAddr());
         return "redirect:/devices/new?successfully=true";
     }
 
     @GetMapping(value = {"/get/{id}"})
-    public String PageDevice(@PathVariable(name = "id") DeviceEntity device,
-                             @RequestParam(
-                                     required = false,
-                                     name = "successfully",
-                                     defaultValue = "false"
-                             ) Boolean successfully,
-                             Model model) {
+    public String PageDevice(
+            @PathVariable(name = "id") DeviceEntity device,
+            @RequestParam(required = false, name = "successfully", defaultValue = "false") Boolean successfully,
+            Model model
+    ) {
         List<UsersTelbookEntity> userByDepartment;
         if (ObjectUtils.isEmpty(device.getUserUsing())) {
             userByDepartment = userTelbookService.getAll();
@@ -82,6 +75,7 @@ public class DevicesController {
                     deviceService.convert(device).getUserUsing().getDepartment()
             );
         }
+        model.addAttribute("Error", "");
         model.addAttribute("Successfully", successfully);
         model.addAttribute("Device", deviceService.convert(device));
         model.addAttribute("AllUsersTelbookByDepartmen", userByDepartment);
@@ -89,12 +83,13 @@ public class DevicesController {
     }
 
     @PostMapping(value = {"/change/{id}"})
-    public String AddNewDevice(HttpServletRequest request,
-                               @PathVariable(name = "id") DeviceEntity device,
-                               @ModelAttribute("Device") @Valid DeviceDTO deviceDTO,
-                               BindingResult bindingResult,
-                               Model model) throws UnknownHostException, DeviceException {
-        String clientIp = request.getRemoteAddr();
+    public String AddNewDevice(
+            HttpServletRequest request,
+            @PathVariable(name = "id") DeviceEntity device,
+            @ModelAttribute("Device") @Valid DeviceDTO deviceDTO,
+            BindingResult bindingResult,
+            Model model
+    ) throws UnknownHostException, DeviceException {
         if (bindingResult.hasErrors()) {
             List<UsersTelbookEntity> userByDepartment;
             if (ObjectUtils.isEmpty(device.getUserUsing())) {
@@ -107,48 +102,32 @@ public class DevicesController {
             model.addAttribute("AllUsersTelbookByDepartmen", userByDepartment);
             return "devices/device";
         }
-        deviceService.change(deviceDTO);
-//        historyService.newHistoryInfo(
-//                "Изменил устройство с ID: " + device.getId(),
-//                clientIp
-//        );
-
-
+        deviceService.change(deviceDTO, request.getRemoteAddr());
         return "redirect:/devices/get/" + device.getId() + "?successfully=true";
     }
 
-    @ExceptionHandler(DeviceException.class)
-    public String DeviceException(DeviceException e, Model model) {
-        String messageUI;
-        switch (e.getMessage()) {
-            case "Device save error !" -> messageUI = "Ошибка сохранения!";
-            case "Device change error !" -> messageUI = "Ошибка изменения!";
-            case "Device already created !" -> messageUI = "Ошибка ! такое устройство уже существует в программе !";
-            case "Error deleted" -> messageUI = "Не удалось удалить устройство!";
-            default -> messageUI = "Непредвиденная ошибка! Обратитесь к разработчикам!";
-        }
-        model.addAttribute("Error", messageUI);
-        model.addAttribute("Successfully", false);
-        //model.addAttribute("AllAddress", addressService.getAll());
-        model.addAttribute("AllTypeDevice", deviceService.getAllTypesDevices());
-        model.addAttribute("AllDepartments", userTelbookService.getAllDepartment());
-        model.addAttribute("AllManufacturer", manufacturerService.getAllByType(TypeEntity.device));
-        model.addAttribute("AllUsersTelbook", userTelbookService.getAll());
-        model.addAttribute("AllStatusDevise", statusService.getAllByType(TypeEntity.device));
-
-        return "devises/device";
+    @GetMapping(value = {"/delete/{id}"})
+    public String DeleteDevice(
+            HttpServletRequest request,
+            @PathVariable(name = "id") DeviceEntity device
+    ) throws UnknownHostException, DeviceException {
+        deviceService.delete(device, request.getRemoteAddr());
+        return "redirect:/devices/all";
     }
 
-    @ExceptionHandler(UnknownHostException.class)
-    public String UnknownHostException() {
-        return "errors/error-ip";
+    @RequestMapping(value = {"/error"})
+    public String showPageErrors(@ModelAttribute("Error") String message, Model model) {
+        model.addAttribute("Error", message);
+        model.addAttribute("Successfully", false);
+        model.addAttribute("Device", new DeviceDTO());
+        model.addAttribute("AllUsersTelbookByDepartmen", userTelbookService.getAll());
+        return "devices/new-device";
     }
 
     @ModelAttribute
     public void ModelFilling(Model model) {
-        model.addAttribute("Error", "");
         model.addAttribute("AllAddress", addressService.getAll());
-        model.addAttribute("AllTypeDevice", deviceService.getAllTypesDevices());
+        model.addAttribute("AllTypeDevice", deviceTypeService.getAll());
         model.addAttribute("AllDepartments", userTelbookService.getAllDepartment());
         model.addAttribute("AllManufacturer", manufacturerService.getAllByType(TypeEntity.device));
         model.addAttribute("AllStatusDevise", statusService.getAllByType(TypeEntity.device));

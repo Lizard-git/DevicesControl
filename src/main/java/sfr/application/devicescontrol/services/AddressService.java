@@ -9,6 +9,7 @@ import org.springframework.util.ObjectUtils;
 import sfr.application.devicescontrol.configs.properties.AddressMessagesProperties;
 import sfr.application.devicescontrol.dto.AddressDto;
 import sfr.application.devicescontrol.entities.telbook.devices_control.AddressEntity;
+import sfr.application.devicescontrol.enums.TypeMessagesHistory;
 import sfr.application.devicescontrol.exceptions.AddressException;
 import sfr.application.devicescontrol.repositories.telbook.device_control.AddressRepository;
 import sfr.application.devicescontrol.utils.mapers.AddressConverter;
@@ -46,9 +47,11 @@ public class AddressService {
     public void save(AddressDto address, String ipAddress) throws AddressException, UnknownHostException {
         //Проверяем объект на наличие id. В методе save должен отсутствовать.
         if (!ObjectUtils.isEmpty(address.getId())) {
-            historyService.newHistoryWarning(
+            historyService.newHistory(
                     addressMessagesProperties.getObjectHasIdMessage(),
-                    ipAddress
+                    ipAddress,
+                    TypeMessagesHistory.Warning,
+                    address.getSettlements().getName() + " " + address.getHouse()
             );
             throw  new AddressException("Address already exists");
         }
@@ -58,9 +61,11 @@ public class AddressService {
                 address.getHouse()
         );
         if (!ObjectUtils.isEmpty(checkAddress)) {
-            historyService.newHistoryWarning(
+            historyService.newHistory(
                     addressMessagesProperties.getAlreadyExistsMessage(),
-                    ipAddress
+                    ipAddress,
+                    TypeMessagesHistory.Warning,
+                    address.getSettlements().getName() + " " + address.getHouse()
             );
             throw new AddressException("Address already exists");
         }
@@ -68,15 +73,19 @@ public class AddressService {
             AddressConverter converter = new AddressConverter();
             addressRepository.save(converter.convertToEntity(address));
         } catch (Exception e) {
-            historyService.newHistoryError(
+            historyService.newHistory(
                     addressMessagesProperties.getErrorAddMessage(),
-                    ipAddress
+                    ipAddress,
+                    TypeMessagesHistory.Error,
+                    address.getSettlements().getName() + " " + address.getHouse()
             );
             throw new AddressException("Address save error");
         }
-        historyService.newHistoryInfo(
+        historyService.newHistory(
                 addressMessagesProperties.getSuccessAddMessage(),
-                ipAddress
+                ipAddress,
+                TypeMessagesHistory.Info,
+                address.getSettlements().getName() + " " + address.getHouse()
         );
     }
 
@@ -90,9 +99,11 @@ public class AddressService {
     public void change(AddressDto address, String ipAddress) throws AddressException, UnknownHostException {
         //Проверяем объект на наличие id. В методе change должен присутствовать.
         if (ObjectUtils.isEmpty(address.getId())) {
-            historyService.newHistoryWarning(
+            historyService.newHistory(
                     addressMessagesProperties.getWarningMutableObjectIdIsNullMessage(),
-                    ipAddress
+                    ipAddress,
+                    TypeMessagesHistory.Warning,
+                    address.getSettlements().getName() + " " + address.getHouse()
             );
             throw  new AddressException("Mutable object id is null");
         }
@@ -103,15 +114,19 @@ public class AddressService {
             try {
                 addressRepository.save(changedAddress);
             } catch (Exception e) {
-                historyService.newHistoryError(
+                historyService.newHistory(
                         addressMessagesProperties.getErrorChangeMessage(),
-                        ipAddress
+                        ipAddress,
+                        TypeMessagesHistory.Error,
+                        address.getSettlements().getName() + " " + address.getHouse()
                 );
                 throw new AddressException("Address change error");
             }
-            historyService.newHistoryInfo(
+            historyService.newHistory(
                     addressMessagesProperties.getSuccessChangeMessage(),
-                    ipAddress
+                    ipAddress,
+                    TypeMessagesHistory.Info,
+                    address.getSettlements().getName() + " " + address.getHouse()
             );
         }
 
@@ -119,28 +134,34 @@ public class AddressService {
 
     public void delete(AddressEntity address, String ipAddress) throws AddressException, UnknownHostException {
         if (!address.getUsers().isEmpty() || !address.getConsumables().isEmpty() || !address.getDevices().isEmpty()) {
-            historyService.newHistoryError(
+            historyService.newHistory(
                     addressMessagesProperties.getErrorObjectAreLocatedAddressEntityMessage(),
-                    ipAddress
+                    ipAddress,
+                    TypeMessagesHistory.Error,
+                    address.getSettlements().getName() + " " + address.getHouse()
             );
             throw new AddressException("Devices or users registered by address");
         }
-        String addressStr = address.getSettlements().getRegion().getName() + " " +
-                address.getSettlements().getName() + " " +
-                address.getStreet() + " " +
-                address.getHouse();
         try {
             addressRepository.delete(address);
         } catch (Exception e) {
-            historyService.newHistoryError(
+            historyService.newHistory(
                     addressMessagesProperties.getErrorDeleteMessage(),
-                    ipAddress
+                    ipAddress,
+                    TypeMessagesHistory.Error,
+                    address.getSettlements().getName() + " " + address.getHouse()
             );
             throw new AddressException("Error deleted");
         }
         historyService.newHistoryInfo(
-                addressMessagesProperties.getSuccessDeletedMessage() + addressStr,
+                addressMessagesProperties.getSuccessDeletedMessage(),
                 ipAddress
+        );
+        historyService.newHistory(
+                addressMessagesProperties.getSuccessDeletedMessage(),
+                ipAddress,
+                TypeMessagesHistory.Info,
+                address.getSettlements().getName() + " " + address.getHouse()
         );
     }
 }

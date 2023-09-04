@@ -18,7 +18,7 @@
         <div th:replace="~{/fragments/header-title-fragment.html::header-title('Все устройства')}"></div>
         <div class="d-flex justify-content-end mt-3">
             <button class="btn btn-warning mx-3 d-none">Списать</button>
-            <button class="btn btn-danger">Удалить</button>
+            <a class="btn btn-danger" th:href="'/devices/delete/' + ${Device.getId()}">Удалить</a>
         </div>
         <div class="card default-shadow mt-4">
             <div class="card-header">Данные об устройстве</div>

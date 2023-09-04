@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sfr.application.devicescontrol.exceptions.AddressException;
+import sfr.application.devicescontrol.exceptions.DeviceException;
 import sfr.application.devicescontrol.exceptions.UsersExceptions;
 
 import java.net.UnknownHostException;
@@ -35,6 +36,20 @@ public class ExceptionController {
         }
         redirectAttributes.addFlashAttribute("Error", message);
         return "redirect:/settings/users/error";
+    }
+
+    @ExceptionHandler(DeviceException.class)
+    public String DeviceException(DeviceException e, RedirectAttributes redirectAttributes) {
+        String message;
+        switch (e.getMessage()) {
+            case "Device save error" -> message = "Ошибка сохранения!";
+            case "Device change error" -> message = "Ошибка изменения!";
+            case "Device already created" -> message = "Ошибка ! такое устройство уже существует в программе !";
+            case "Error deleted" -> message = "Не удалось удалить устройство!";
+            default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам!";
+        }
+        redirectAttributes.addFlashAttribute("Error", message);
+        return "redirect:/devices/error";
     }
 
     @ExceptionHandler(UnknownHostException.class)
