@@ -17,13 +17,13 @@
     <div class="container-fluid">
         <div th:replace="~{/fragments/header-title-fragment.html::header-title('Все устройства')}"></div>
         <div class="d-flex justify-content-end mt-3">
-            <button class="btn btn-warning mx-3">Списать</button>
-            <button class="btn btn-danger">Удалить</button>
+            <button class="btn btn-warning mx-3 d-none">Списать</button>
+            <a class="btn btn-danger" th:href="'/devices/delete/' + ${Device.getId()}">Удалить</a>
         </div>
         <div class="card default-shadow mt-4">
             <div class="card-header">Данные об устройстве</div>
             <div class="card-body card-body-custom">
-                <div class="alert alert-info mt-1" role="alert">
+                <div class="alert alert-info mt-1 d-none" role="alert">
                     ну да тут пусто
                 </div>
                 <div th:if="${Error != ''}" class="alert alert-danger mt-4" role="alert" th:text="${Error}"></div>

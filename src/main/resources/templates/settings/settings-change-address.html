@@ -17,7 +17,6 @@
         <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки')}"></div>
 
         <div th:replace="~{/fragments/settings-tabs.html::settings-tabs('/address')}"></div>
-
         <div class="card bg-color-light-blue default-shadow mt-4">
             <div class="card-header">Создание нового адреса (здания СФР)</div>
             <div class="card-body card-body-custom">
@@ -53,7 +52,7 @@
                             </div>
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <label class="text-white" for="house">Дом</label>
-                                <!--                                <small class="form-text text-danger" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}">Ошибка</small>-->
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('house')}" th:errors="*{house}">Ошибка</small>
                                 <input id="house" class="form-control" type="text" th:field="*{house}">
                             </div>
                         </div>

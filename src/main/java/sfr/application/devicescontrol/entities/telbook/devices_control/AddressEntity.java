@@ -33,16 +33,23 @@ public class AddressEntity {
     @OneToMany(mappedBy = "address")
     private List<UserEntity> users;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "address")
+    private List<DeviceEntity> devices;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "address")
+    private List<ConsumablesEntity> consumables;
+
     @PreRemove
     private void clearAddressForUser() {
         users.forEach(userEntity ->
-            userEntity.setAddress(null)
+                userEntity.setAddress(null)
         );
-//        devices.forEach(device ->
-//                device.setAddress(null)
-//        );
+        devices.forEach(device ->
+                device.setAddress(null)
+        );
+        consumables.forEach(consumable ->
+                consumable.setAddress(null));
     }
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "address")
-//    private List<DevicesEntity> devices;
 }

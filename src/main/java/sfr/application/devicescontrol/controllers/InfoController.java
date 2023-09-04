@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/info")
 public class InfoController {
     @GetMapping(value = {"/home"})
-    public String PageAllDevice() {
+    public String showInfoPage() {
         return "info/info-home";
     }
 }
