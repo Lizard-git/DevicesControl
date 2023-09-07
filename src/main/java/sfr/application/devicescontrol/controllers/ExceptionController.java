@@ -1,5 +1,6 @@
 package sfr.application.devicescontrol.controllers;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -57,4 +58,8 @@ public class ExceptionController {
         return "errors/error-ip";
     }
 
+    @ExceptionHandler(DataAccessException.class)
+    public String DataBaseFailConnection() {
+        return "errors/error-db-connect";
+    }
 }
