@@ -12,11 +12,11 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/devices')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/devices')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Добавление нового устройства')}"></div>
-        <div th:replace="~{/fragments/devices-tabs.html::devices-tabs('/new')}"></div>
+        <div th:replace="~{fragments/header-title-fragment.html::header-title('Добавление нового устройства')}"></div>
+        <div th:replace="~{fragments/devices-tabs.html::devices-tabs('/new')}"></div>
         <div class="card default-shadow mt-4">
             <div class="card-header">Данные нового устройства</div>
             <div class="card-body card-body-custom">
@@ -30,9 +30,6 @@
                     <p> Помните что устройства должны быть добавлены все по отдельности ! Например, если у вас комплект из 2 устройств под одним инвентарным номером, то вы добавляете 2 разных устройства и ставите им одинаковый инвентарный номер</p>
                     <p> В программе не может существовать устройства у которого тип устройства и инвентарный номер совпадают с уже добавленными!</p>
                 </div>
-<!--                <form th:method="post" th:action="'/devices/change/'" th:object="${}">-->
-
-<!--                </form>-->
                 <form th:method="post" th:action="'/devices/new'" th:object="${Device}">
                     <div class="row">
                         <div class="col-12 col-lg-6">

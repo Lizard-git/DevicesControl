@@ -9,10 +9,10 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/error')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/error')}" ></nav>
 <main id="content-main">
   <div class="container-fluid">
-    <div th:replace="~{/fragments/header-title-fragment.html::header-title('Error (unknown ip address)')}"></div>
+    <div th:replace="~{fragments/header-title-fragment.html::header-title('Error (unknown ip address)')}"></div>
     <h6>Вы видете это сообщение по тому что программа не смогла определить ваш ip адресс. Обратитесь к разработчику.</h6>
   </div>
 </main>

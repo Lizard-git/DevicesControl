@@ -10,12 +10,12 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки')}"></div>
+        <div th:replace="~{fragments/header-title-fragment.html::header-title('Настройки')}"></div>
 
-        <div th:replace="~{/fragments/settings-tabs.html::settings-tabs('/consumable')}"></div>
+        <div th:replace="~{fragments/settings-tabs.html::settings-tabs('/consumable')}"></div>
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>

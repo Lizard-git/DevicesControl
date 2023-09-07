@@ -12,12 +12,12 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки')}"></div>
+        <div th:replace="~{fragments/header-title-fragment.html::header-title('Настройки')}"></div>
 
-        <div th:replace="~{/fragments/settings-tabs.html::settings-tabs('/users')}"></div>
+        <div th:replace="~{fragments/settings-tabs.html::settings-tabs('/users')}"></div>
 
         <div th:if="${Error != ''}" class="alert alert-danger mt-4" role="alert" th:text="${Error}">
 
@@ -159,7 +159,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-primary" type="submit">Создать</button>
+                        <button class="btn btn-success" type="submit">Создать</button>
                     </div>
                 </form>
             </div>

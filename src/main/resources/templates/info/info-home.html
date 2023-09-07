@@ -10,15 +10,25 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/info')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/info')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Информация')}"></div>
+        <div th:replace="~{fragments/header-title-fragment.html::header-title('Информация')}"></div>
     <div class="card default-shadow mt-4">
         <div class="card-header">
             Обновления
         </div>
         <div class="card-body">
+            <div class="alert alert-info">
+                <h5>v.2.0.1</h5>
+                <ol>
+                    <li>Страница устройства</li>
+                    <ol>
+                        <li>Добавленна кнопка назад, которая вернет на страницу всех устройств</li>
+                        <li>Кнопка удалить теперь выведит предупреждение об удалении</li>
+                    </ol>
+                </ol>
+            </div>
             <div class="alert alert-info">
                 <h5>v.2.0.0</h5>
                 <ol>
@@ -56,6 +66,7 @@
                             <li>Добавлена возможность удаления пользователей (только администраторам)</li>
                             <li>Все пользователи могут просматривать кто зарегистрированн в программе, но изменять могут только администраторы</li>
                             <li>Cессия в программе будет длиннее. (Реже теперь будет необходимо вводить логин и пароль)</li>
+                            <li>Администратор более не может подсказать вам ваш пароль, но может сбросить его.</li>
                         </ol>
                         <li>Другое:</li>
                         <ol>

@@ -12,11 +12,11 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/devices')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/devices')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Все устройства')}"></div>
-        <div th:replace="~{/fragments/devices-tabs.html::devices-tabs('/all')}"></div>
+        <div th:replace="~{fragments/header-title-fragment.html::header-title('Все устройства')}"></div>
+        <div th:replace="~{fragments/devices-tabs.html::devices-tabs('/all')}"></div>
 
         <div class="table-responsive p-0 mt-4">
             <table id="tableDevice" class="w-100 table table-striped align-items-center mb-0"

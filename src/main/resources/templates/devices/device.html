@@ -12,13 +12,39 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/devices')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/devices')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Все устройства')}"></div>
-        <div class="d-flex justify-content-end mt-3">
-            <button class="btn btn-warning mx-3 d-none">Списать</button>
-            <a class="btn btn-danger" th:href="'/devices/delete/' + ${Device.getId()}">Удалить</a>
+        <div th:replace="~{fragments/header-title-fragment.html::header-title('Все устройства')}"></div>
+        <div class="d-flex justify-content-between w-100 mt-4">
+            <a class="btn btn-primary" href="/devices/all">Назад</a>
+            <div class="d-flex">
+                <button class="btn btn-warning mx-3 d-none">Списать</button>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Удалить
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление устройства</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Вы действительно хотите удалить данное устройство ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <a class="btn btn-danger" th:href="'/devices/delete/' + ${Device.getId()}">Удалить</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card default-shadow mt-4">
             <div class="card-header">Данные об устройстве</div>

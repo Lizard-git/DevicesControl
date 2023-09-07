@@ -11,12 +11,12 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav th:replace="~{/fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
+<nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/settings')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
-        <div th:replace="~{/fragments/header-title-fragment.html::header-title('Настройки')}"></div>
+        <div th:replace="~{fragments/header-title-fragment.html::header-title('Настройки')}"></div>
 
-        <div th:replace="~{/fragments/settings-tabs.html::settings-tabs('/users')}"></div>
+        <div th:replace="~{fragments/settings-tabs.html::settings-tabs('/users')}"></div>
 
         <div class="card bg-color-light-blue default-shadow mt-4">
             <div class="card-header">Редактирование пользователя</div>
