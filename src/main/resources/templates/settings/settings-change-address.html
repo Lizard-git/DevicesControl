@@ -24,7 +24,7 @@
                     Для изменения нового адреса выберите населенный пункт из списка ниже,
                     введите улицу (в формате ул.Xхххххх, ул.Xxx-xxx, ул.Xxx xxx) и номер дома (например: 99) <br>
                     Если вашего населенного пункта нет в списке, обратитесь к разработчику.<br>
-                    <small class="text-danger">Имейте ввиду что адрес поменяется у всего (Устройств, расходников и пользователей зарегестрированных по нему)</small>
+                    <small class="text-danger">Имейте в виду, что адрес поменяется у всего (Устройств, расходников и пользователей зарегистрированных по нему)</small>
                 </div>
 <!--                th:object="${}"-->
                 <form th:method="post" action="/settings/address/change" th:object="${Address}">
@@ -33,7 +33,6 @@
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <input type="hidden" th:field="*{id}">
                                 <label class="text-white" for="settlements">Населенный пункт</label>
-<!--                                <small class="form-text text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Ошибка</small>-->
                                 <select id="settlements" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{settlements}">
                                     <option th:value="${settlement.getId()}" th:each="settlement: ${AllSettlements}"
                                             th:text="${
@@ -47,7 +46,6 @@
                         <div class="col-12 col-lg-6">
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <label class="text-white" for="street">Улица</label>
-<!--                                <small class="form-text text-danger" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}">Ошибка</small>-->
                                 <input id="street" class="form-control" type="text" th:field="*{street}">
                             </div>
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">

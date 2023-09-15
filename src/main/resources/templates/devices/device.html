@@ -55,7 +55,7 @@
                 <div th:if="${Error != ''}" class="alert alert-danger mt-4" role="alert" th:text="${Error}"></div>
 
                 <div th:if="${Successfully}" class="alert alert-success mt-4" role="alert">
-                    Действие успешно выполненно.
+                    Действие успешно выполнено.
                 </div>
                 <form th:method="post" th:action="'/devices/change/' + ${Device.getId()}" th:object="${Device}">
                     <div class="row">
@@ -114,7 +114,7 @@
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="device-department-change">Отдел</label>
                                 <select id="device-department-change" class="js-example-basic-single form-control" onchange="getUserByDepartment(this)" style="width: 100% !important;">
-                                    <option value="0">Выбирите отдел...</option>
+                                    <option value="0">Выберите отдел...</option>
                                     <option th:if="${Device.getUserUsing() != null}"
                                             th:each="department : ${AllDepartments}" th:value="${department.toString()}"
                                             th:text="${department.toString()}"
@@ -130,7 +130,7 @@
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="device-user-using-change">Устройство использует</label>
                                 <select id="device-user-using-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{userUsing}">
-                                    <option value="-1">Выбирите отдел для отображения пользователей...</option>
+                                    <option value="-1">Выберите отдел для отображения пользователей...</option>
                                     <option class="allUsers"
                                             th:if="${Device.getUserUsing() != null}"
                                             th:each="user : ${AllUsersTelbookByDepartmen}"

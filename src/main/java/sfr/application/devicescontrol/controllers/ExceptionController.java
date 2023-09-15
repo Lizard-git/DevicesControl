@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sfr.application.devicescontrol.exceptions.AddressException;
 import sfr.application.devicescontrol.exceptions.DeviceException;
+import sfr.application.devicescontrol.exceptions.DeviceTypeException;
 import sfr.application.devicescontrol.exceptions.UsersExceptions;
 
 import java.net.UnknownHostException;
@@ -51,6 +52,18 @@ public class ExceptionController {
         }
         redirectAttributes.addFlashAttribute("Error", message);
         return "redirect:/devices/error";
+    }
+
+    @ExceptionHandler(DeviceTypeException.class)
+    public String DeviceTypeException(DeviceTypeException e, RedirectAttributes redirectAttributes) {
+        String message;
+        switch (e.getMessage()) {
+            case "Error. This type already exists" -> message = "Такой тип уже существует уже существует!";
+            case "Error." -> message = "Не удалось добавить тип!";
+            default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам";
+        }
+        redirectAttributes.addFlashAttribute("Error", message);
+        return "redirect:/settings/devices/error";
     }
 
     @ExceptionHandler(UnknownHostException.class)
