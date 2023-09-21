@@ -41,6 +41,9 @@
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         <small>Cтатус</small>
                     </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small>Пользователь</small>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -67,7 +70,15 @@
             },
             dom: 'Bfrtip',
             buttons: [
-                'excel'
+                {
+                    extend: 'excel',
+                    customizeData: function (data) {
+                        for (var i = 0; i < data.body.length; i++) {
+                            data.body[i][1] = "'" + data.body[i][1];
+                            data.body[i][3] = "'" + data.body[i][3];
+                        }
+                    }
+                }
             ],
             ajax: {
                 contentType: 'application/json',
@@ -87,6 +98,7 @@
                             d.manufacturer = d.manufacturer.name;
                         }
                         if (d.model === "" || d.model === null) d.model = 'Не указанно';
+                        if (d.userUsing === null  || d.userUsing === "") d.userUsing = 'Не указанно';
                         return d;
                     })
                     return data;
@@ -94,17 +106,26 @@
             },
 
             columns : [{
+                type : "string",
                 data : 'type.name'
             }, {
-                data : 'inventoryNumber'
+                type : "string",
+                data : 'inventoryNumber',
             },  {
+                type : "string",
                 data : 'manufacturer'
             },  {
+                type : "string",
                 data : 'model'
             },  {
+                type : "string",
                 data : 'address'
             },  {
+                type : "string",
                 data : 'status.name'
+            },  {
+                type : "userUsing",
+                data : 'userUsing'
             }],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).css( 'cursor', 'pointer' );

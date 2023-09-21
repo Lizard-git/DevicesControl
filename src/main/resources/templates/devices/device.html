@@ -49,6 +49,8 @@
         <div class="card default-shadow mt-4">
             <div class="card-header">Данные об устройстве</div>
             <div class="card-body card-body-custom">
+                <div th:if="${OldUserUsing != null}" th:text="'Ранее данное устройство эксплуатировал пользователь с доменным именем:' + ${OldUserUsing} + ' но был уволен'" class="alert alert-warning">
+                </div>
                 <div class="alert alert-info mt-1 d-none" role="alert">
                     ну да тут пусто
                 </div>
