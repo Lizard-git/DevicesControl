@@ -12,6 +12,7 @@ import sfr.application.devicescontrol.entities.telbook.devices_control.AddressEn
 import sfr.application.devicescontrol.exceptions.AddressException;
 import sfr.application.devicescontrol.services.AddressService;
 import sfr.application.devicescontrol.services.SettlementsService;
+import sfr.application.devicescontrol.utils.UtilsMethods;
 import sfr.application.devicescontrol.utils.mapers.AddressConverter;
 
 import java.net.UnknownHostException;
@@ -49,7 +50,8 @@ public class AddressSettingsController {
         if (bindingResult.hasErrors()) {
             return showPage(model, "", addressDto, false);
         }
-        addressService.save(addressDto, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        addressService.save(addressDto, ip);
         return "redirect:/settings/address?successfully=true";
     }
 
@@ -62,7 +64,8 @@ public class AddressSettingsController {
         if (bindingResult.hasErrors()) {
             return "settings/settings-change-address";
         }
-        addressService.change(addressDto, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        addressService.change(addressDto, ip);
         return "redirect:/settings/address?successfully=true";
     }
 
@@ -71,7 +74,8 @@ public class AddressSettingsController {
             HttpServletRequest request,
             @PathVariable(name = "id") AddressEntity address
     ) throws AddressException, UnknownHostException {
-        addressService.delete(address, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        addressService.delete(address, ip);
         return "redirect:/settings/address?successfully=true";
     }
 

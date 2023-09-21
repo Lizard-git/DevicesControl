@@ -7,5 +7,5 @@ import sfr.application.devicescontrol.entities.telbook.devices_control.Settlemen
 
 @Repository
 public interface AddressRepository extends JpaRepository<AddressEntity, Long> {
-    AddressEntity findBySettlementsAndStreetAndHouse(SettlementsEntity settlements, String street, String House);
+    boolean existsBySettlementsAndStreetAndHouse(SettlementsEntity settlements, String street, String house);
 }

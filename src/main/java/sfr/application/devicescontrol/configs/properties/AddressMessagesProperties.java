@@ -12,14 +12,17 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "classpath:messages.properties", encoding = "UTF-8")
 @ConfigurationProperties(prefix = "address")
 public class AddressMessagesProperties {
-    private String successAddMessage;
-    private String successChangeMessage;
-    private String successDeletedMessage;
+    //standard
+    private String successAdditionMessage;
     private String errorAddMessage;
+    private String successChangeMessage;
     private String errorChangeMessage;
-    private String errorObjectAreLocatedAddressEntityMessage;
+    private String successDeletedMessage;
     private String errorDeleteMessage;
-    private String warningMutableObjectIdIsNullMessage;
-    private String objectHasIdMessage;
-    private String alreadyExistsMessage;
+    private String warningAlreadyExistsMessage;
+
+    //custom
+    private String errorSomethingIsIndicatedMessage;
+    private String errorChangeNonExistentEntry;
+
 }
