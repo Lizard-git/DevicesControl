@@ -9,8 +9,6 @@ import sfr.application.devicescontrol.entities.telbook.devices_control.StatusEnt
 @Repository
 public interface DeviceRepository extends JpaRepository<DeviceEntity, Long> {
     Long countByStatus(StatusEntity status);
-
     Long countByStatusAndType(StatusEntity status, DeviceTypeEntity type);
-
     DeviceEntity findAllByTypeAndInventoryNumber(DeviceTypeEntity type, String inventoryNumber);
 }

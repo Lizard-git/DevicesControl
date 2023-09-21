@@ -18,6 +18,7 @@ import sfr.application.devicescontrol.services.AddressService;
 import sfr.application.devicescontrol.services.RoleService;
 import sfr.application.devicescontrol.services.UserService;
 import sfr.application.devicescontrol.services.UserTelbookService;
+import sfr.application.devicescontrol.utils.UtilsMethods;
 
 import java.net.UnknownHostException;
 
@@ -65,7 +66,8 @@ public class UserSettingsController {
             model.addAttribute("Error", "");
             return "settings/settings-user";
         }
-        userService.save(userDto, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        userService.save(userDto, ip);
         return "redirect:/settings/users?successfully=true";
     }
 
@@ -87,7 +89,8 @@ public class UserSettingsController {
             model.addAttribute("Error", "");
             return "settings/settings-user";
         }
-        userService.change(userDto, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        userService.change(userDto, ip);
         return "redirect:/settings/users?successfully=true";
     }
 
@@ -96,7 +99,8 @@ public class UserSettingsController {
             HttpServletRequest request,
             @PathVariable(name = "id") UserEntity user
     ) throws UsersExceptions, UnknownHostException {
-        userService.remove(user, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        userService.remove(user, ip);
         return "redirect:/settings/users?successfully=true";
     }
 
@@ -105,7 +109,8 @@ public class UserSettingsController {
             HttpServletRequest request,
             @PathVariable(name = "id") UserEntity user
     ) throws UsersExceptions, UnknownHostException {
-        userService.delete(user, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        userService.delete(user, ip);
         return "redirect:/settings/users?successfully=true";
     }
 

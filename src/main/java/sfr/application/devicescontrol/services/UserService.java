@@ -2,14 +2,11 @@ package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import sfr.application.devicescontrol.configs.properties.UserMessagesProperties;
 import sfr.application.devicescontrol.dto.UserDto;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
-import sfr.application.devicescontrol.enums.TypeMessagesHistory;
 import sfr.application.devicescontrol.exceptions.UsersExceptions;
 import sfr.application.devicescontrol.repositories.telbook.device_control.UserRepository;
 
@@ -24,10 +21,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserTelbookService userTelbookService;
     private final PasswordEncoder passwordEncoder;
-    private final HistoryService historyService;
-
-    @Autowired
-    private UserMessagesProperties userMessagesProperties;
 
     /**
      * Вернет не удаленного пользователя по его login
@@ -55,49 +48,19 @@ public class UserService {
      */
     public void save(UserDto userDto, String ipAddress) throws UsersExceptions, UnknownHostException {
         if (!ObjectUtils.isEmpty(userDto.getId())) {
-            historyService.newHistory(
-                    userMessagesProperties.getAlreadyExistsMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Warning,
-                    userDto.getLogin()
-            );
             throw new UsersExceptions("Such user already exists");
         }
         if (!ObjectUtils.isEmpty(userRepository.findByLogin(userDto.getLogin()))) {
-            historyService.newHistory(
-                    userMessagesProperties.getAlreadyExistsMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Warning,
-                    userDto.getLogin()
-            );
             throw new UsersExceptions("Such user already exists");
         }
         if (!ObjectUtils.isEmpty(userRepository.findByDomainName(userDto.getLogin()))) {
-            historyService.newHistory(
-                    userMessagesProperties.getAlreadyExistsMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Warning,
-                    userDto.getLogin()
-            );
             throw new UsersExceptions("Such user already exists");
         }
         try {
             userRepository.save(convert(userDto));
         } catch (Exception e) {
-            historyService.newHistory(
-                    userMessagesProperties.getErrorAddMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Error,
-                    userDto.getLogin()
-            );
             throw new UsersExceptions("Save error user");
         }
-        historyService.newHistory(
-                userMessagesProperties.getSuccessAddMessage(),
-                ipAddress,
-                TypeMessagesHistory.Info,
-                userDto.getLogin()
-        );
     }
 
     /**
@@ -109,41 +72,17 @@ public class UserService {
      */
     public void change(UserDto userDto, String ipAddress) throws UsersExceptions, UnknownHostException {
         if (ObjectUtils.isEmpty(userDto.getId())) {
-            historyService.newHistory(
-                    userMessagesProperties.getErrorChangeMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Warning,
-                    userDto.getLogin()
-            );
             throw new UsersExceptions("Failed to change user");
         }
         UserEntity user = userRepository.getReferenceById(userDto.getId());
         if (ObjectUtils.isEmpty(user)) {
-            historyService.newHistory(
-                    userMessagesProperties.getErrorChangeMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Warning,
-                    userDto.getLogin()
-            );
             throw new UsersExceptions("Failed to change user");
         }
         try {
             userRepository.save(merger(userDto, user));
         } catch (Exception e) {
-            historyService.newHistory(
-                    userMessagesProperties.getErrorChangeMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Error,
-                    userDto.getLogin()
-            );
             throw new UsersExceptions("Failed to change user");
         }
-        historyService.newHistory(
-                userMessagesProperties.getSuccessChangeMessage(),
-                ipAddress,
-                TypeMessagesHistory.Info,
-                userDto.getLogin()
-        );
     }
 
     /**
@@ -158,20 +97,8 @@ public class UserService {
             user.setIsDeleted(new Date());
             userRepository.save(user);
         } catch (Exception e) {
-            historyService.newHistory(
-                    userMessagesProperties.getErrorChangeMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Error,
-                    user.getLogin()
-            );
             throw new UsersExceptions("Failed to remove user");
         }
-        historyService.newHistory(
-                userMessagesProperties.getSuccessRemovedMessage(),
-                ipAddress,
-                TypeMessagesHistory.Info,
-                user.getLogin()
-        );
     }
 
     /**
@@ -183,20 +110,8 @@ public class UserService {
         try {
             userRepository.delete(user);
         } catch (Exception e) {
-            historyService.newHistory(
-                    userMessagesProperties.getErrorDeleteMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Error,
-                    user.getLogin()
-            );
             throw new UsersExceptions("Failed to delete user");
         }
-        historyService.newHistory(
-                userMessagesProperties.getSuccessDeletedMessage(),
-                ipAddress,
-                TypeMessagesHistory.Info,
-                user.getLogin()
-        );
     }
 
     /**

@@ -10,8 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 @Setter
 @Configuration
 @PropertySource(value = "classpath:messages.properties", encoding = "UTF-8")
-@ConfigurationProperties(prefix = "users")
-public class UserMessagesProperties {
+@ConfigurationProperties(prefix = "manufacturer")
+public class ManufacturerMessagesProperties {
     //standard
     private String successAdditionMessage;
     private String errorAddMessage;
@@ -22,5 +22,4 @@ public class UserMessagesProperties {
     private String warningAlreadyExistsMessage;
 
     //custom
-    private String successRemovedMessage;
 }

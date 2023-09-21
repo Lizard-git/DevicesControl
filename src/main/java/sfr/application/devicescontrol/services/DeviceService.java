@@ -2,19 +2,16 @@ package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import sfr.application.devicescontrol.configs.properties.DeviceMessagesProperties;
 import sfr.application.devicescontrol.dto.DeviceDTO;
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceTypeEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.StatusEntity;
-import sfr.application.devicescontrol.enums.TypeMessagesHistory;
+import sfr.application.devicescontrol.entities.telbook.prov_ter_org.UsersTelbookEntity;
 import sfr.application.devicescontrol.exceptions.DeviceException;
 import sfr.application.devicescontrol.repositories.telbook.device_control.DeviceRepository;
 
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +22,6 @@ import java.util.Map;
 public class DeviceService {
     private final DeviceRepository deviceRepository;
     private final UserTelbookService userTelbookService;
-    private final HistoryService historyService;
-
-    @Autowired
-    private DeviceMessagesProperties deviceMessagesProperties;
 
     public Long getCountAll() {
         return deviceRepository.count();
@@ -48,84 +41,38 @@ public class DeviceService {
         return deviceRepository.findAll();
     }
 
-    public void save(DeviceDTO deviceDTO, String ipAddress) throws DeviceException, UnknownHostException {
+    public void save(DeviceDTO deviceDTO, String ipAddress) throws DeviceException {
         if (!ObjectUtils.isEmpty(deviceRepository.findAllByTypeAndInventoryNumber(deviceDTO.getType(), deviceDTO.getInventoryNumber()))) {
-            historyService.newHistory(
-                    deviceMessagesProperties.getAlreadyExistsMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Warning,
-                    deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber()
-            );
             throw new DeviceException("Device already created");
         }
 
         try {
             deviceRepository.save(convert(deviceDTO));
         } catch (Exception e) {
-            historyService.newHistory(
-                    deviceMessagesProperties.getErrorAddMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Error,
-                    deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber()
-            );
             throw new DeviceException("Device save error");
         }
-        historyService.newHistory(
-                deviceMessagesProperties.getSuccessAddMessage(),
-                ipAddress,
-                TypeMessagesHistory.Info,
-                deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber()
-        );
     }
-    public void change(DeviceDTO deviceDTO, String ipAddress) throws DeviceException, UnknownHostException {
+    public void change(DeviceDTO deviceDTO, String ipAddress) throws DeviceException {
         try {
             deviceRepository.save(convert(deviceDTO));
         } catch (Exception e) {
-            historyService.newHistory(
-                    deviceMessagesProperties.getErrorChangeMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Error,
-                    deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber()
-            );
             throw new DeviceException("Device change error");
         }
-        historyService.newHistory(
-                deviceMessagesProperties.getSuccessChangeMessage(),
-                ipAddress,
-                TypeMessagesHistory.Info,
-                deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber()
-        );
     }
 
-    public void delete(DeviceEntity device, String ipAddress) throws UnknownHostException, DeviceException {
+    public void delete(DeviceEntity device, String ipAddress) throws DeviceException {
         try {
             deviceRepository.delete(device);
         } catch (Exception e) {
-            historyService.newHistory(
-                    deviceMessagesProperties.getErrorDeleteMessage(),
-                    ipAddress,
-                    TypeMessagesHistory.Error,
-                    device.getType().getName() + " " + device.getInventoryNumber()
-            );
             throw new DeviceException("Device change error");
         }
-        historyService.newHistory(
-                deviceMessagesProperties.getSuccessDeletedMessage(),
-                ipAddress,
-                TypeMessagesHistory.Info,
-                device.getType().getName() + " " + device.getInventoryNumber()
-        );
     }
 
     public DeviceEntity convert(DeviceDTO deviceDTO) {
         String domainNameUsing = null;
-       // String domainNameResponsible = null;
         if (!ObjectUtils.isEmpty(deviceDTO.getUserUsing())) {
             domainNameUsing = deviceDTO.getUserUsing().getDomain();
         }
-//        if (!ObjectUtils.isEmpty(deviceDTO.getUserResponsible()) ) {
-//            domainNameResponsible = deviceDTO.getUserResponsible().getDomain();
-//        }
         return DeviceEntity.builder()
                 .id(deviceDTO.getId())
                 .inventoryNumber(deviceDTO.getInventoryNumber())
@@ -141,11 +88,14 @@ public class DeviceService {
                 .warrantyDateWith(deviceDTO.getWarrantyDateWith())
                 .status(deviceDTO.getStatus())
                 .userUsing(domainNameUsing)
-                //.userResponsible(domainNameResponsible)
                 .build();
     }
 
     public DeviceDTO convert( DeviceEntity device) {
+        UsersTelbookEntity user = null;
+        if(!ObjectUtils.isEmpty(userTelbookService.getByDomain(device.getUserUsing()))) {
+            user = userTelbookService.getByDomain(device.getUserUsing());
+        }
         return DeviceDTO.builder()
                 .id(device.getId())
                 .inventoryNumber(device.getInventoryNumber())
@@ -160,8 +110,7 @@ public class DeviceService {
                 .warrantyDateBy(device.getWarrantyDateBy())
                 .warrantyDateWith(device.getWarrantyDateWith())
                 .status(device.getStatus())
-                .userUsing(userTelbookService.getByDomain(device.getUserUsing()))
-                //.userResponsible(userTelbookService.getByDomain(device.getUserResponsible()))
+                .userUsing(user)
                 .build();
     }
 }

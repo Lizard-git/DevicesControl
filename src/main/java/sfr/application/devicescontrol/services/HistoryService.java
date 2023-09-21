@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import sfr.application.devicescontrol.entities.telbook.devices_control.HistoryEntity;
 import sfr.application.devicescontrol.enums.TypeMessagesHistory;
 import sfr.application.devicescontrol.repositories.telbook.device_control.HistoryRepository;
-import sfr.application.devicescontrol.utils.UtilsMethods;
 
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class HistoryService {
     private final HistoryRepository historyRepository;
     private final SecurityService securityService;
     /**
-     * Получает всю историяю из базы данных
+     * Получает всю историю из базы данных
      * @return List<HistoryEntity>
      */
     public List<HistoryEntity> getAllHistory() {
@@ -40,17 +38,16 @@ public class HistoryService {
     /**
      * Добавляет новую запись истории
      * @param change - изменения
-     * @param ipAddress - ip адресс с которого производятся изменения
+     * @param ipAddress - ip адрес с которого производятся изменения
      * @param type - тип сообщения Error, Info, Warning
      * @param dopInfo - Дополнительная информация для записи
-     * @throws UnknownHostException - Ошибка получения ip адреса
      */
-    public void newHistory(String change, String ipAddress, TypeMessagesHistory type, String dopInfo) throws UnknownHostException {
+    public void newHistory(String change, String ipAddress, TypeMessagesHistory type, String dopInfo) {
         historyRepository.save(HistoryEntity.builder()
                         .textChange(change)
                         .dataHistory(new Date())
                         .user(securityService.getCurrentUser())
-                        .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
+                        .ipAddress(ipAddress)
                         .type(type)
                         .dopInfo(dopInfo)
                         .build());
@@ -59,16 +56,15 @@ public class HistoryService {
     /**
      * Добавляет новую запись истории
      * @param change - изменения
-     * @param ipAddress - ip адресс с которого производятся изменения
+     * @param ipAddress - ip адрес с которого производятся изменения
      * @param type - тип сообщения Error, Info, Warning
-     * @throws UnknownHostException - Ошибка получения ip адреса
      */
-    public void newHistory(String change, String ipAddress, TypeMessagesHistory type) throws UnknownHostException {
+    public void newHistory(String change, String ipAddress, TypeMessagesHistory type) {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
                 .user(securityService.getCurrentUser())
-                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
+                .ipAddress(ipAddress)
                 .type(type)
                 .build());
     }
@@ -76,15 +72,14 @@ public class HistoryService {
     /**
      * Добавляет новую запись истории типа Error
      * @param change - изменения
-     * @param ipAddress - ip адресс с которого производятся изменения
-     * @throws UnknownHostException - Ошибка получения ip адреса
+     * @param ipAddress - ip адрес с которого производятся изменения
      */
-    public void newHistoryError(String change, String ipAddress) throws UnknownHostException {
+    public void newHistoryError(String change, String ipAddress) {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
                 .user(securityService.getCurrentUser())
-                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
+                .ipAddress(ipAddress)
                 .type(TypeMessagesHistory.Error)
                 .build());
     }
@@ -92,15 +87,14 @@ public class HistoryService {
     /**
      * Добавляет новую запись истории типа Info
      * @param change - изменения
-     * @param ipAddress - ip адресс с которого производятся изменения
-     * @throws UnknownHostException - Ошибка получения ip адреса
+     * @param ipAddress - ip адрес с которого производятся изменения
      */
-    public void newHistoryInfo(String change, String ipAddress) throws UnknownHostException {
+    public void newHistoryInfo(String change, String ipAddress) {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
                 .user(securityService.getCurrentUser())
-                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
+                .ipAddress(ipAddress)
                 .type(TypeMessagesHistory.Info)
                 .build());
     }
@@ -108,15 +102,14 @@ public class HistoryService {
     /**
      * Добавляет новую запись истории типа Warning
      * @param change - изменения
-     * @param ipAddress - ip адресс с которого производятся изменения
-     * @throws UnknownHostException - Ошибка получения ip адреса
+     * @param ipAddress - ip адрес с которого производятся изменения
      */
-    public void newHistoryWarning(String change, String ipAddress) throws UnknownHostException {
+    public void newHistoryWarning(String change, String ipAddress) {
         historyRepository.save(HistoryEntity.builder()
                 .textChange(change)
                 .dataHistory(new Date())
                 .user(securityService.getCurrentUser())
-                .ipAddress(UtilsMethods.ipAddressValidator(ipAddress))
+                .ipAddress(ipAddress)
                 .type(TypeMessagesHistory.Warning)
                 .build());
     }

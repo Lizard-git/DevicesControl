@@ -14,6 +14,7 @@ import sfr.application.devicescontrol.entities.telbook.prov_ter_org.UsersTelbook
 import sfr.application.devicescontrol.enums.TypeEntity;
 import sfr.application.devicescontrol.exceptions.DeviceException;
 import sfr.application.devicescontrol.services.*;
+import sfr.application.devicescontrol.utils.UtilsMethods;
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -57,7 +58,8 @@ public class DevicesController {
             model.addAttribute("Error", "");
             return "devices/new-device";
         }
-        deviceService.save(deviceDTO, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        deviceService.save(deviceDTO, ip);
         return "redirect:/devices/new?successfully=true";
     }
 
@@ -67,8 +69,12 @@ public class DevicesController {
             @RequestParam(required = false, name = "successfully", defaultValue = "false") Boolean successfully,
             Model model
     ) {
+        UsersTelbookEntity usersTelbook = userTelbookService.getByDomain(device.getUserUsing());
+        if (!ObjectUtils.isEmpty(device.getUserUsing()) && ObjectUtils.isEmpty(usersTelbook)) {
+            model.addAttribute("OldUserUsing", device.getUserUsing());
+        }
         List<UsersTelbookEntity> userByDepartment;
-        if (ObjectUtils.isEmpty(device.getUserUsing())) {
+        if (ObjectUtils.isEmpty(device.getUserUsing()) || ObjectUtils.isEmpty(usersTelbook)) {
             userByDepartment = userTelbookService.getAll();
         } else {
             userByDepartment = userTelbookService.getAllUserByDepartment(
@@ -83,7 +89,7 @@ public class DevicesController {
     }
 
     @PostMapping(value = {"/change/{id}"})
-    public String AddNewDevice(
+    public String ChangeDevice(
             HttpServletRequest request,
             @PathVariable(name = "id") DeviceEntity device,
             @ModelAttribute("Device") @Valid DeviceDTO deviceDTO,
@@ -102,7 +108,8 @@ public class DevicesController {
             model.addAttribute("AllUsersTelbookByDepartmen", userByDepartment);
             return "devices/device";
         }
-        deviceService.change(deviceDTO, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        deviceService.change(deviceDTO, ip);
         return "redirect:/devices/get/" + device.getId() + "?successfully=true";
     }
 
@@ -111,7 +118,8 @@ public class DevicesController {
             HttpServletRequest request,
             @PathVariable(name = "id") DeviceEntity device
     ) throws UnknownHostException, DeviceException {
-        deviceService.delete(device, request.getRemoteAddr());
+        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        deviceService.delete(device, ip);
         return "redirect:/devices/all";
     }
 
@@ -129,7 +137,7 @@ public class DevicesController {
         model.addAttribute("AllAddress", addressService.getAll());
         model.addAttribute("AllTypeDevice", deviceTypeService.getAll());
         model.addAttribute("AllDepartments", userTelbookService.getAllDepartment());
-        model.addAttribute("AllManufacturer", manufacturerService.getAllByType(TypeEntity.device));
+        model.addAttribute("AllManufacturer", manufacturerService.getAll());
         model.addAttribute("AllStatusDevise", statusService.getAllByType(TypeEntity.device));
         model.addAttribute("AllDeviceType", deviceTypeService.getAll());
     }

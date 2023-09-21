@@ -12,12 +12,14 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = "classpath:messages.properties", encoding = "UTF-8")
 @ConfigurationProperties(prefix = "devices")
 public class DeviceMessagesProperties {
-    private String successAddMessage;
-    private String successChangeMessage;
-    private String successRemovedMessage;
-    private String successDeletedMessage;
+    //standard
+    private String successAdditionMessage;
     private String errorAddMessage;
+    private String successChangeMessage;
     private String errorChangeMessage;
+    private String successDeletedMessage;
     private String errorDeleteMessage;
-    private String alreadyExistsMessage;
+    private String warningAlreadyExistsMessage;
+
+    //custom
 }
