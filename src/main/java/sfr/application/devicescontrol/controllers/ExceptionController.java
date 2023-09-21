@@ -42,10 +42,7 @@ public class ExceptionController {
     public String DeviceException(DeviceException e, RedirectAttributes redirectAttributes) {
         String message;
         switch (e.getMessage()) {
-            case "Device save error" -> message = "Ошибка сохранения!";
-            case "Device change error" -> message = "Ошибка изменения!";
-            case "Device already created" -> message = "Ошибка ! такое устройство уже существует в программе !";
-            case "Error deleted" -> message = "Не удалось удалить устройство!";
+            case "Device already created." -> message = "Ошибка ! Такое устройство уже существует в программе !";
             default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам!";
         }
         redirectAttributes.addFlashAttribute("Error", message);

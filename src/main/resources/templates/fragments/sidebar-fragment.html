@@ -31,12 +31,12 @@
 <!--                    <p>Документы</p>-->
 <!--                </a>-->
 <!--            </li>-->
-<!--            <li sec:authorize="${hasAnyRole('Admin')}" th:classappend="${active == '/history'} ? 'active'">-->
-<!--                <a class="link-item disabled" href="/history/home">-->
-<!--                    <i class="bi bi-clock-history" style="font-size: 1.4rem; color: white;"></i>-->
-<!--                    <p>История</p>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li sec:authorize="${hasAnyRole('Admin')}" th:classappend="${active == '/history'} ? 'active'">
+                <a class="link-item disabled" href="/history/home">
+                    <i class="bi bi-clock-history" style="font-size: 1.4rem; color: white;"></i>
+                    <p>История</p>
+                </a>
+            </li>
             <li th:classappend="${active == '/info'} ? 'active'">
                 <a class="link-item" href="/info/home">
                     <i class="bi bi-info-circle" style="font-size: 1.4rem; color: white;"></i>
