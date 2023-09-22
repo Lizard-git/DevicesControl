@@ -34,10 +34,8 @@ public class DeviceAspect {
                 TypeMessagesHistory.Info,
                 deviceStr
         );
-        log.info(
-                "Successfully adding a new device. IP: " + ipAddress +
-                        ", device:" + deviceStr
-        );
+        log.info("Successfully adding a new device. IP: " + ipAddress +
+                ", device:" + deviceStr);
     }
 
     @AfterThrowing(pointcut = "deviceAddExecution(deviceDTO, ipAddress)", throwing = "exception")
@@ -51,10 +49,8 @@ public class DeviceAspect {
                         ", device:" + deviceStr);
             }
             default -> {
-                log.error(
-                        "The user was unable to add a new device. IP: " + ipAddress +
-                                ", device:" + deviceStr
-                );
+                log.error("The user was unable to add a new device. IP: " + ipAddress +
+                        ", device:" + deviceStr);
                 message = deviceMessagesProperties.getErrorAddMessage();
             }
         }
@@ -73,10 +69,8 @@ public class DeviceAspect {
                 TypeMessagesHistory.Info,
                 deviceStr
         );
-        log.info(
-                "Successful change of device. IP: " + ipAddress +
-                        ", device:" + deviceStr
-        );
+        log.info("Successful change of device. IP: " + ipAddress +
+                ", device:" + deviceStr);
     }
 
     @AfterThrowing(pointcut = "deviceChangeExecution(deviceDTO, ipAddress)", throwing = "exception")
@@ -90,10 +84,8 @@ public class DeviceAspect {
                         ", device:" + deviceStr);
             }
             default -> {
-                log.error(
-                        "The user was unable to change the device. IP: " + ipAddress +
-                                ", device:" + deviceStr
-                );
+                log.error("The user was unable to change the device. IP: " + ipAddress +
+                        ", device:" + deviceStr);
                 message = deviceMessagesProperties.getErrorChangeMessage();
             }
         }
@@ -112,10 +104,8 @@ public class DeviceAspect {
                 TypeMessagesHistory.Info,
                 deviceStr
         );
-        log.info(
-                "Successful delete of device. IP: " + ipAddress +
-                        ", device:" + deviceStr
-        );
+        log.info("Successful delete of device. IP: " + ipAddress +
+                ", device:" + deviceStr);
     }
 
     @AfterThrowing(pointcut = "deviceDeleteExecution(device, ipAddress)", throwing = "exception")
@@ -124,10 +114,8 @@ public class DeviceAspect {
         String deviceStr = device.getType().getName() + " " + device.getInventoryNumber();
         switch (exception.getMessage()) {
             default -> {
-                log.error(
-                        "The user was unable to delete the device. IP: " + ipAddress +
-                                ", device:" + deviceStr
-                );
+                log.error("The user was unable to delete the device. IP: " + ipAddress +
+                        ", device:" + deviceStr);
                 message = deviceMessagesProperties.getErrorDeleteMessage();
             }
         }

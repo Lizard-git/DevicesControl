@@ -75,6 +75,10 @@ public class DeviceEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date warrantyDateBy;
 
+    @Column(name = "disposal_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date disposalDate;
+
     @JsonIgnore
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<SpecificationsEntity> specifications;

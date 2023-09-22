@@ -86,8 +86,13 @@ public class DeviceService {
      * @throws DeviceException Ошибка! (устройство уже существует\неизвестная ошибка)
      */
     public void change(DeviceDTO deviceDTO, String ipAddress) throws DeviceException {
-        if (deviceRepository.existsByTypeAndInventoryNumber(deviceDTO.getType(), deviceDTO.getInventoryNumber())) {
-            throw new DeviceException("Device already created.");
+        DeviceEntity device = deviceRepository.getReferenceById(deviceDTO.getId());
+        // Если у изменяемого объекта изменились поля тип и инвентарный номер, то необходимо выполнить проверку
+        // на отсутствие новых значений этих полей в базе данных
+        if (!deviceDTO.getInventoryNumber().equals(device.getInventoryNumber()) || !deviceDTO.getType().equals(device.getType())) {
+            if (deviceRepository.existsByTypeAndInventoryNumber(deviceDTO.getType(), deviceDTO.getInventoryNumber())) {
+                throw new DeviceException("Device already created.", device);
+            }
         }
         try {
             deviceRepository.save(convert(deviceDTO));
@@ -135,6 +140,7 @@ public class DeviceService {
                 .warrantyDateWith(deviceDTO.getWarrantyDateWith())
                 .status(deviceDTO.getStatus())
                 .userUsing(domainNameUsing)
+                .disposalDate(deviceDTO.getDisposalDate())
                 .build();
     }
 
@@ -163,6 +169,7 @@ public class DeviceService {
                 .warrantyDateWith(device.getWarrantyDateWith())
                 .status(device.getStatus())
                 .userUsing(user)
+                .disposalDate(device.getDisposalDate())
                 .build();
     }
 }

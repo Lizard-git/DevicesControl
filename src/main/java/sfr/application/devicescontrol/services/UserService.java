@@ -10,7 +10,6 @@ import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntit
 import sfr.application.devicescontrol.exceptions.UsersExceptions;
 import sfr.application.devicescontrol.repositories.telbook.device_control.UserRepository;
 
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 
@@ -44,22 +43,21 @@ public class UserService {
      * @param userDto - пользовательские данные
      * @param ipAddress - ip адрес пользователя
      * @throws UsersExceptions - Ошибка сохранения, скорее всего такой пользователь уже существует.
-     * @throws UnknownHostException - Ошибка получения ip адреса.
      */
-    public void save(UserDto userDto, String ipAddress) throws UsersExceptions, UnknownHostException {
+    public void save(UserDto userDto, String ipAddress) throws UsersExceptions {
         if (!ObjectUtils.isEmpty(userDto.getId())) {
-            throw new UsersExceptions("Such user already exists");
+            throw new UsersExceptions("Such user already exists.");
         }
         if (!ObjectUtils.isEmpty(userRepository.findByLogin(userDto.getLogin()))) {
-            throw new UsersExceptions("Such user already exists");
+            throw new UsersExceptions("Such user already exists.");
         }
         if (!ObjectUtils.isEmpty(userRepository.findByDomainName(userDto.getLogin()))) {
-            throw new UsersExceptions("Such user already exists");
+            throw new UsersExceptions("Such user already exists.");
         }
         try {
             userRepository.save(convert(userDto));
         } catch (Exception e) {
-            throw new UsersExceptions("Save error user");
+            throw new UsersExceptions("Save error user.");
         }
     }
 
@@ -68,20 +66,16 @@ public class UserService {
      * @param userDto - пользовательские данные
      * @param ipAddress - ip адрес пользователя
      * @throws UsersExceptions - Ошибка сохранения, скорее всего такой пользователь уже существует.
-     * @throws UnknownHostException - Ошибка получения ip адреса.
      */
-    public void change(UserDto userDto, String ipAddress) throws UsersExceptions, UnknownHostException {
-        if (ObjectUtils.isEmpty(userDto.getId())) {
-            throw new UsersExceptions("Failed to change user");
-        }
+    public void change(UserDto userDto, String ipAddress) throws UsersExceptions {
         UserEntity user = userRepository.getReferenceById(userDto.getId());
         if (ObjectUtils.isEmpty(user)) {
-            throw new UsersExceptions("Failed to change user");
+            throw new UsersExceptions("Failed to change user.");
         }
         try {
             userRepository.save(merger(userDto, user));
         } catch (Exception e) {
-            throw new UsersExceptions("Failed to change user");
+            throw new UsersExceptions("Failed to change user.");
         }
     }
 
@@ -90,9 +84,8 @@ public class UserService {
      * @param user - пользователь
      * @param ipAddress - ip адрес пользователя
      * @throws UsersExceptions - Ошибка сохранения, скорее всего такой пользователь уже существует.
-     * @throws UnknownHostException - Ошибка получения ip адреса.
      */
-    public void remove(UserEntity user, String ipAddress) throws UsersExceptions, UnknownHostException {
+    public void remove(UserEntity user, String ipAddress) throws UsersExceptions {
         try {
             user.setIsDeleted(new Date());
             userRepository.save(user);
@@ -106,7 +99,7 @@ public class UserService {
      * @param user - удаляемый пользователь
      * @throws UsersExceptions - ошибка удаления
      */
-    public void delete(UserEntity user, String ipAddress) throws UsersExceptions, UnknownHostException {
+    public void delete(UserEntity user, String ipAddress) throws UsersExceptions {
         try {
             userRepository.delete(user);
         } catch (Exception e) {

@@ -23,7 +23,7 @@ public class DeviceTypeService {
 
     public void save(String name, String ipAddress) throws DeviceTypeException, UnknownHostException {
         if (!ObjectUtils.isEmpty(deviceTypeRepository.findAllByNameContaining(name))) {
-            throw new DeviceTypeException("Error. This type already exists");
+            throw new DeviceTypeException("Error. This type already exists.");
         }
         try {
             deviceTypeRepository.save(DeviceTypeEntity.builder().name(name).build());

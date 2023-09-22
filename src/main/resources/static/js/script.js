@@ -24,6 +24,16 @@ $(document).ready(function () {
     for (let i = 0; i < a.length; i++) {
         getCountByStatus(a[i]);
     }
+    if ($('#device-status-change').val() ==='6') $("#disposal-date-input").removeClass("d-none");
+
+    $('#device-status-change').change(function() {
+        var selectedValue = $(this).val();
+        if (selectedValue === '6') {
+            $("#disposal-date-input").removeClass("d-none");
+        } else {
+            $("#disposal-date-input").addClass("d-none");
+        }
+    });
 });
 
 $(window).resize(() => {

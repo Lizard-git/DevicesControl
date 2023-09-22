@@ -79,6 +79,11 @@
                                     <option th:each="status : ${AllStatusDevise}" th:value="${status.getId()}" th:text="${status.getName()}"></option>
                                 </select>
                             </div>
+                            <div id="disposal-date-input" class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative d-none">
+                                <label for="device-disposal-date-change">Дата списания</label>
+                                <small class="form-text text-danger" th:if="${#fields.hasErrors('disposalDate')}" th:errors="*{disposalDate}">Ошибка</small>
+                                <input id="device-disposal-date-change" class="form-control" type="date" th:field="*{disposalDate}">
+                            </div>
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <label for="device-cabinet-change">Кабинет</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('cabinet')}" th:errors="*{cabinet}">Ошибка</small>

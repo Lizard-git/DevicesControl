@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import sfr.application.devicescontrol.entities.telbook.devices_control.*;
+import sfr.application.devicescontrol.entities.telbook.devices_control.AddressEntity;
+import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceTypeEntity;
+import sfr.application.devicescontrol.entities.telbook.devices_control.ManufacturerEntity;
+import sfr.application.devicescontrol.entities.telbook.devices_control.StatusEntity;
 import sfr.application.devicescontrol.entities.telbook.prov_ter_org.UsersTelbookEntity;
 
 import java.util.Date;
@@ -57,4 +60,7 @@ public class DeviceDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date warrantyDateBy;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date disposalDate;
 }

@@ -86,8 +86,7 @@ public class UserSettingsController {
            );
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("Error", "");
-            return "settings/settings-user";
+            return "settings/settings-change-users";
         }
         String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
         userService.change(userDto, ip);

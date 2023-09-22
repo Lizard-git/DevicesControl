@@ -67,6 +67,8 @@ public class DevicesController {
     public String PageDevice(
             @PathVariable(name = "id") DeviceEntity device,
             @RequestParam(required = false, name = "successfully", defaultValue = "false") Boolean successfully,
+            @RequestParam(required = false, name = "error", defaultValue = "false") Boolean error,
+            @ModelAttribute("Error") String message,
             Model model
     ) {
         UsersTelbookEntity usersTelbook = userTelbookService.getByDomain(device.getUserUsing());
@@ -81,7 +83,12 @@ public class DevicesController {
                     deviceService.convert(device).getUserUsing().getDepartment()
             );
         }
-        model.addAttribute("Error", "");
+        if (error) {
+            model.addAttribute("Error", message);
+        } else {
+            model.addAttribute("Error", "");
+        }
+
         model.addAttribute("Successfully", successfully);
         model.addAttribute("Device", deviceService.convert(device));
         model.addAttribute("AllUsersTelbookByDepartmen", userByDepartment);

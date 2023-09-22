@@ -14,11 +14,8 @@ public class ExceptionController {
     public String AddressException(AddressException e, RedirectAttributes redirectAttributes) {
         String message;
         switch (e.getMessage()) {
-            case "Address save error." -> message = "Ошибка сохранения!";
-            case "Address change error." -> message = "Ошибка изменения!";
-            case "Address delete error." -> message = "Не удалось удалить адрес!";
             case "Address already exists." -> message = "Такой адрес уже существует!";
-            case "Attempting to modify an entity that is not in the database." -> message = "Не удалось изменить адрес! такой адрес уже существует!";
+            case "Attempting to modify an entity that is not in the database." -> message = "Не удалось изменить адрес! такой адрес не существует!";
             case "Failed to delete address. The entity is registered at the address." -> message = "Ошибка удаления ! По адресу что то зарегистрировано!";
             default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам!";
         }
@@ -30,7 +27,7 @@ public class ExceptionController {
     public String UserException(UsersExceptions e, RedirectAttributes redirectAttributes) {
         String message;
         switch (e.getMessage()) {
-            case "Such user already exists" -> message = "Такой пользователь уже существует!";
+            case "Such user already exists." -> message = "Такой пользователь уже существует!";
             case "Failed to change user" -> message = "Не удалось изменить пользователя";
             default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам";
         }
@@ -42,7 +39,10 @@ public class ExceptionController {
     public String DeviceException(DeviceException e, RedirectAttributes redirectAttributes) {
         String message;
         switch (e.getMessage()) {
-            case "Device already created." -> message = "Ошибка ! Такое устройство уже существует в программе !";
+            case "Device already created." -> {
+                redirectAttributes.addFlashAttribute("Error", "Ошибка ! Такое устройство уже существует в программе !");
+                return "redirect:/devices/get/" + e.getDevice().getId() + "?error=true";
+            }
             default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам!";
         }
         redirectAttributes.addFlashAttribute("Error", message);
@@ -53,8 +53,7 @@ public class ExceptionController {
     public String DeviceTypeException(DeviceTypeException e, RedirectAttributes redirectAttributes) {
         String message;
         switch (e.getMessage()) {
-            case "Error. This type already exists" -> message = "Такой тип устройства уже существует!";
-            case "Error." -> message = "Не удалось добавить тип!";
+            case "Error. This type already exists." -> message = "Такой тип устройства уже существует!";
             default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам";
         }
         redirectAttributes.addFlashAttribute("Error", message);

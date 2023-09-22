@@ -23,4 +23,5 @@ public class UserMessagesProperties {
 
     //custom
     private String successRemovedMessage;
+    private String errorRemovedMessage;
 }
