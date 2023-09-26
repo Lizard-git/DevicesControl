@@ -22,7 +22,7 @@ public class HistoryService {
      * Получает всю историю из базы данных
      * @return List<HistoryEntity>
      */
-    public List<HistoryEntity> getAllHistory() {
+    public List<HistoryEntity> getAll() {
         return historyRepository.findAll();
     }
 
@@ -31,7 +31,7 @@ public class HistoryService {
      * @param pageable - пагинация
      * @return Page<HistoryEntity>
      */
-    public Page<HistoryEntity> getAllHistory(Pageable pageable) {
+    public Page<HistoryEntity> getAll(Pageable pageable) {
         return historyRepository.findAll(pageable);
     }
 

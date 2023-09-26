@@ -36,7 +36,7 @@
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <label for="device-type-change">Тип устройства</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Ошибка</small>
-                                <select id="device-type-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{type}">
+                                <select id="device-type-change" class="js-example-basic-single form-control select2-auto-input" style="width: 100% !important;" th:field="*{type}">
                                     <option value="0">Не указано ...</option>
                                     <option th:each="type : ${AllDeviceType}" th:value="${type.getId()}" th:text="${type.name}"></option>
                                 </select>
@@ -59,7 +59,7 @@
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="user-address-change">Адрес</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Ошибка</small>
-                                <select id="user-address-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{address}">
+                                <select id="user-address-change" class="js-example-basic-single form-control select2-auto-input" style="width: 100% !important;" th:field="*{address}">
                                     <option value="0">Не указано ...</option>
                                     <option th:each="address : ${AllAddress}" th:value="${address.getId()}"
                                             th:text="${
@@ -74,7 +74,7 @@
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <label for="device-status-change">Статус</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Ошибка</small>
-                                <select id="device-status-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{status}">
+                                <select id="device-status-change" class="js-example-basic-single form-control select2-auto-input" style="width: 100% !important;" th:field="*{status}">
                                     <option value="0">Не указано ...</option>
                                     <option th:each="status : ${AllStatusDevise}" th:value="${status.getId()}" th:text="${status.getName()}"></option>
                                 </select>
@@ -93,7 +93,7 @@
                         <div class="col-12 col-lg-6">
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="device-department-change">Отдел</label>
-                                <select id="device-department-change" class="js-example-basic-single form-control" onchange="getUserByDepartment(this)" style="width: 100% !important;">
+                                <select id="device-department-change" class="js-example-basic-single form-control select2-auto-input" onchange="getUserByDepartment(this)" style="width: 100% !important;">
                                     <option value="0">Выберите отдел...</option>
                                     <option th:if="${Device.getUserUsing() != null}"
                                             th:each="department : ${AllDepartments}" th:value="${department.toString()}"
@@ -109,7 +109,7 @@
                             </div>
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="device-user-using-change">Устройство использует</label>
-                                <select id="device-user-using-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{userUsing}">
+                                <select id="device-user-using-change" class="js-example-basic-single form-control select2-auto-input" style="width: 100% !important;" th:field="*{userUsing}">
                                     <option value="-1">Выберите отдел для отображения пользователей...</option>
                                     <option class="allUsers"
                                             th:if="${Device.getUserUsing() != null}"
@@ -121,7 +121,7 @@
                             </div>
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative">
                                 <label for="device-manufacturer-change">Производитель</label>
-                                <select id="device-manufacturer-change" class="js-example-basic-single form-control" style="width: 100% !important;" th:field="*{manufacturer}">
+                                <select id="device-manufacturer-change" class="js-example-basic-single form-control select2-auto-input" style="width: 100% !important;" th:field="*{manufacturer}">
                                     <option value="0">Не указан...</option>
                                     <option class="allManufacturer"
                                             th:each="user : ${AllManufacturer}"

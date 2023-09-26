@@ -50,6 +50,10 @@ public class SecurityService implements UserDetailsService {
         return grantedAuthorities;
     }
 
+    /**
+     * Метод возвращает текущего пользователя сессии
+     * @return UserEntity
+     */
     public UserEntity getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

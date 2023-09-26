@@ -34,8 +34,12 @@ $(document).ready(function () {
             $("#disposal-date-input").addClass("d-none");
         }
     });
-});
 
+
+});
+$('.select2-auto-input').on('select2:open', function() {
+    $('.select2-search__field').get(0).focus();
+});
 $(window).resize(() => {
     let navbarToggle = $("#navbar-toggle");
     let contentContainer = $("#content-main");

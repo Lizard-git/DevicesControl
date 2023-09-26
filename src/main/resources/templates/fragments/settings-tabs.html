@@ -12,7 +12,7 @@
             <a class="nav-link" th:classappend="${active == '/address'} ? 'active'" href="/settings/address">Адреса</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:classappend="${active == '/devices'} ? 'active'" href="/settings/devices">Устройства</a>
+            <a class="nav-link" sec:authorize="${hasAnyRole('Admin')}" th:classappend="${active == '/devices'} ? 'active'" href="/settings/devices">Устройства</a>
         </li>
         <li class="nav-item">
             <a class="nav-link disabled" th:classappend="${active == '/consumable'} ? 'active'" href="/settings/consumable">Расходники</a>

@@ -14,6 +14,55 @@
 <main id="content-main">
     <div class="container-fluid">
         <div th:replace="~{fragments/header-title-fragment.html::header-title('История')}"></div>
+        <div class="card default-shadow mt-4">
+            <div class="card-header">
+                История пользователей в программе
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Изменения</th>
+                        <th scope="col">Сущность</th>
+                        <th scope="col">Пользователь</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="history: ${AllHistory}">
+                        <th scope="row" th:text="${history.getDataHistory().toString()}"></th>
+                        <td th:text="${history.getTextChange()}"></td>
+                        <td th:text="${history.getDopInfo()}"></td>
+                        <td th:text="${history.getUser().getLogin()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                    <div aria-label="Page navigation example">
+                        <ul th:if="${AllHistory.totalPages > 0}" class="pagination pagination-sm">
+                            <!--Переписать !!!!!!!!-->
+                            <li th:if="${AllHistory.number != 0}">
+                                <a th:href="@{'/history/home/0'}" class="page-link">0</a>
+                            </li>
+                            <li th:if="${(AllHistory.number - 1) > 0}">
+                                <a th:href="@{'/history/home/' + ${AllHistory.number - 1}}" th:text="${AllHistory.number - 1}" class="page-link"></a>
+                            </li>
+                            <li class="page-item active">
+                                <a th:href="@{'/history/home/' + ${AllHistory.number}}" th:text="${AllHistory.number}" class="page-link"></a>
+                            </li>
+                            <li th:if="${(AllHistory.number + 1) < AllHistory.totalPages - 1}">
+                                <a th:href="@{'/history/home/' + ${AllHistory.number + 1}}" th:text="${AllHistory.number + 1}" class="page-link"></a>
+                            </li>
+                            <li th:if="${AllHistory.number != AllHistory.totalPages - 1 && AllHistory.number != AllHistory.totalPages}">
+                                ...
+                            </li>
+                            <li th:if="${AllHistory.number != AllHistory.totalPages - 1}">
+                                <a th:href="@{'/history/home/' + ${AllHistory.totalPages - 1}}" th:text="${AllHistory.totalPages - 1}" class="page-link"></a>
+                            </li>
+                            <!--Переписать !!!!!!!! end-->
+                        </ul>
+                    </div>
+            </div>
+        </div>
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>

@@ -8,6 +8,7 @@ import sfr.application.devicescontrol.enums.TypeEntity;
 import sfr.application.devicescontrol.exceptions.DeviceManufacturerException;
 import sfr.application.devicescontrol.repositories.telbook.device_control.ManufacturerRepository;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -21,7 +22,9 @@ public class ManufacturerService {
      * @return List<ManufacturerEntity>
      */
     public List<ManufacturerEntity> getAll() {
-        return manufacturerRepository.findAll();
+        List<ManufacturerEntity> result = manufacturerRepository.findAll();
+        result.sort(Comparator.comparing(ManufacturerEntity::getName));
+        return result;
     }
 
     /**
