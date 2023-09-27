@@ -38,9 +38,10 @@ public class DevicesController {
     @GetMapping(value = {"/new"})
     public String PageNewDevice(
             @RequestParam(required = false, name = "successfully", defaultValue = "false") Boolean successfully,
+            @ModelAttribute("Error") String message,
             Model model
     ) {
-        model.addAttribute("Error", "");
+        model.addAttribute("Error", message);
         model.addAttribute("Successfully", successfully);
         model.addAttribute("Device", new DeviceDTO());
         model.addAttribute("AllUsersTelbookByDepartmen", userTelbookService.getAll());

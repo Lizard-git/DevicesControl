@@ -43,7 +43,7 @@ public class DeviceAspect {
         String message;
         String deviceStr = deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber();
         switch (exception.getMessage()) {
-            case "Device already created." -> {
+            case "Save error. Device already created." -> {
                 message = deviceMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to add a new device. This device already exists. IP: " + ipAddress +
                         ", device:" + deviceStr);
@@ -78,7 +78,7 @@ public class DeviceAspect {
         String message;
         String deviceStr = deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber();
         switch (exception.getMessage()) {
-            case "Device already created." -> {
+            case "Change error. Device already created." -> {
                 message = deviceMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to change device. This device already exists. IP: " + ipAddress +
                         ", device:" + deviceStr);

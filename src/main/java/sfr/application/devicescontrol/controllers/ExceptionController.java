@@ -39,7 +39,11 @@ public class ExceptionController {
     public String DeviceException(DeviceException e, RedirectAttributes redirectAttributes) {
         String message;
         switch (e.getMessage()) {
-            case "Device already created." -> {
+            case "Save error. Device already created." -> {
+                redirectAttributes.addFlashAttribute("Error", "Ошибка ! Такое устройство уже существует в программе !");
+                return "redirect:/devices/new";
+            }
+            case "Change error. Device already created." -> {
                 redirectAttributes.addFlashAttribute("Error", "Ошибка ! Такое устройство уже существует в программе !");
                 return "redirect:/devices/get/" + e.getDevice().getId() + "?error=true";
             }

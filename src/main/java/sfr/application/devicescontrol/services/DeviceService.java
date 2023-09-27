@@ -70,7 +70,7 @@ public class DeviceService {
      */
     public void save(DeviceDTO deviceDTO, String ipAddress) throws DeviceException {
         if (deviceRepository.existsByTypeAndInventoryNumber(deviceDTO.getType(), deviceDTO.getInventoryNumber())) {
-            throw new DeviceException("Device already created.");
+            throw new DeviceException("Save error. Device already created.");
         }
         try {
             deviceRepository.save(convert(deviceDTO));
@@ -91,7 +91,7 @@ public class DeviceService {
         // на отсутствие новых значений этих полей в базе данных
         if (!deviceDTO.getInventoryNumber().equals(device.getInventoryNumber()) || !deviceDTO.getType().equals(device.getType())) {
             if (deviceRepository.existsByTypeAndInventoryNumber(deviceDTO.getType(), deviceDTO.getInventoryNumber())) {
-                throw new DeviceException("Device already created.", device);
+                throw new DeviceException("Change error. Device already created.", device);
             }
         }
         try {
