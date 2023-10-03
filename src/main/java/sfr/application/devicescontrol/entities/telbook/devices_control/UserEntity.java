@@ -58,4 +58,8 @@ public class UserEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<HistoryEntity> history;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<HistoryDeviceEntity> historyDevice;
 }

@@ -25,12 +25,12 @@
                     <p>Работа с техникой</p>
                 </a>
             </li>
-<!--            <li th:classappend="${active == '/doc'} ? 'active'">-->
-<!--                <a class="link-item disabled" href="/doc/home">-->
-<!--                    <i class="bi bi-file-earmark-text" style="font-size: 1.4rem; color: white;"></i>-->
-<!--                    <p>Документы</p>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li th:classappend="${active == '/doc'} ? 'active'">
+                <a class="link-item disabled" href="/doc/home">
+                    <i class="bi bi-file-earmark-text" style="font-size: 1.4rem; color: white;"></i>
+                    <p>Документы</p>
+                </a>
+            </li>
             <li sec:authorize="${hasAnyRole('Admin')}" th:classappend="${active == '/history'} ? 'active'">
                 <a class="link-item disabled" href="/history/home">
                     <i class="bi bi-clock-history" style="font-size: 1.4rem; color: white;"></i>
