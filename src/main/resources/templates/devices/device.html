@@ -188,6 +188,33 @@
                 </form>
             </div>
         </div>
+
+        <div class="card default-shadow mt-4">
+            <div class="card-header">История устройства</div>
+            <div class="card-body card-body-custom">
+                <div class="table-responsive p-0 mt-4">
+                    <table id="tableDevice" th:attr="data-device-id=${Device.getId()}" class="w-100 table table-striped align-items-center mb-0"
+                           data-sticky-header="true" data-sticky-header-offset-y="60">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text- text-secondary text-xxs font-weight-bolder opacity-7">
+                                <small>Дата действия</small>
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                <small>Изменение</small>
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                <small>Пользователь</small>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>
@@ -200,6 +227,60 @@
         $('.js-example-basic-single').select2({
             theme: "bootstrap"
         });
+        let table = $('#tableDevice').DataTable({
+            pageLength: 5,
+            language: {
+                url: '/plugins/data-tables/ru.json'
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    customizeData: function (data) {
+                        for (var i = 0; i < data.body.length; i++) {
+                            data.body[i][1] = "'" + data.body[i][1];
+                            data.body[i][3] = "'" + data.body[i][3];
+                        }
+                    }
+                }
+            ],
+            ajax: {
+                contentType: 'application/json',
+                url: '/api/v1/devices/get/history/' + document.querySelector('[data-device-id]').getAttribute('data-device-id'),
+                type: 'POST',
+                dataSrc: function (json) {
+                    let data = json.map(function (d) {
+                        // let typeSettlements = d.address.settlements.type;
+                        // let nameSettlements = d.address.settlements.name;
+                        // let street = d.address.street;
+                        // let house = d.address.house;
+                        // let region = '(' + d.address.settlements.region.name + ' район)';
+                        // d.address = typeSettlements + ' ' + nameSettlements + ' ' + street + ' ' + house + ' ' + region;
+                        // if (d.manufacturer === null) {
+                        //     d.manufacturer = "Не указанно";
+                        // } else {
+                        //     d.manufacturer = d.manufacturer.name;
+                        // }
+                        // if (d.model === "" || d.model === null) d.model = 'Не указанно';
+                        // if (d.userUsing === null  || d.userUsing === "") d.userUsing = 'Не указанно';
+                        return d;
+                    })
+                    return data;
+                }
+            },
+
+            columns : [{
+                type : "string",
+                data : 'dataHistory'
+            }, {
+                type : "string",
+                data : 'textChange',
+            },  {
+                type : "string",
+                data : 'user.login'
+            }]
+        });
+        table.order( [0, 'desc'] ).draw();
     });
 
 </script>

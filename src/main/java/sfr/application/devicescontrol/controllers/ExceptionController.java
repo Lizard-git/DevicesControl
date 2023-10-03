@@ -47,6 +47,10 @@ public class ExceptionController {
                 redirectAttributes.addFlashAttribute("Error", "Ошибка ! Такое устройство уже существует в программе !");
                 return "redirect:/devices/get/" + e.getDevice().getId() + "?error=true";
             }
+            case "The device has not changed." -> {
+                redirectAttributes.addFlashAttribute("Error", "Вы не внесли изменения");
+                return "redirect:/devices/get/" + e.getDevice().getId() + "?error=true";
+            }
             default -> message = "Непредвиденная ошибка! Обратитесь к разработчикам!";
         }
         redirectAttributes.addFlashAttribute("Error", message);

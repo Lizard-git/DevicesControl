@@ -1,6 +1,5 @@
 package sfr.application.devicescontrol.entities.telbook.devices_control;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import sfr.application.devicescontrol.enums.TypeMessagesHistory;
@@ -29,11 +28,14 @@ public class HistoryDeviceEntity {
     @Column(name = "date", nullable = false)
     private Date dataHistory;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_Device", nullable = false)
     private DeviceEntity device;
 
     @Column(name = "dop_Info")
     private String dopInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_User", nullable = false)
+    private UserEntity user;
 }

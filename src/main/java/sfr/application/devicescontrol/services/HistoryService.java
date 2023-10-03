@@ -43,14 +43,19 @@ public class HistoryService {
      * @param dopInfo - Дополнительная информация для записи
      */
     public void newHistory(String change, String ipAddress, TypeMessagesHistory type, String dopInfo) {
-        historyRepository.save(HistoryEntity.builder()
-                        .textChange(change)
-                        .dataHistory(new Date())
-                        .user(securityService.getCurrentUser())
-                        .ipAddress(ipAddress)
-                        .type(type)
-                        .dopInfo(dopInfo)
-                        .build());
+        try {
+            historyRepository.save(HistoryEntity.builder()
+                    .textChange(change)
+                    .dataHistory(new Date())
+                    .user(securityService.getCurrentUser())
+                    .ipAddress(ipAddress)
+                    .type(type)
+                    .dopInfo(dopInfo)
+                    .build());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
     }
 
     /**

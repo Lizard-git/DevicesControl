@@ -9,6 +9,7 @@ import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceEnt
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceTypeEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.StatusEntity;
 import sfr.application.devicescontrol.entities.telbook.prov_ter_org.UsersTelbookEntity;
+import sfr.application.devicescontrol.enums.TypeMessagesHistory;
 import sfr.application.devicescontrol.exceptions.DeviceException;
 import sfr.application.devicescontrol.repositories.telbook.device_control.DeviceRepository;
 
@@ -16,12 +17,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static sfr.application.devicescontrol.utils.UtilsMethods.*;
+
 @Service
 @AllArgsConstructor
 @Slf4j
 public class DeviceService {
     private final DeviceRepository deviceRepository;
     private final UserTelbookService userTelbookService;
+    private final HistoryDevicesService historyDevicesService;
+
+    private static final String defaultMessage = "В устройстве изменено(ы) поле(я): ";
 
     /**
      * Получает кол-во устройств зарегистрированных в базе данных
@@ -73,7 +79,8 @@ public class DeviceService {
             throw new DeviceException("Save error. Device already created.");
         }
         try {
-            deviceRepository.save(convert(deviceDTO));
+            DeviceEntity device = deviceRepository.save(convert(deviceDTO));
+            historyDevicesService.newHistory("Устройство добавлено в систему", device, TypeMessagesHistory.Info);
         } catch (Exception e) {
             throw new DeviceException("Device save error.");
         }
@@ -95,7 +102,15 @@ public class DeviceService {
             }
         }
         try {
-            deviceRepository.save(convert(deviceDTO));
+            DeviceEntity deviceConvert = convert(deviceDTO);
+            if (!device.equals(deviceConvert)) {
+                String testChanges = "";
+                testChanges = getMessageIdentifyingChanges(deviceConvert, device);
+                device = deviceRepository.save(deviceConvert);
+                historyDevicesService.newHistory(testChanges, device, TypeMessagesHistory.Info);
+            } else {
+                throw new DeviceException("The device has not changed.", device);
+            }
         } catch (Exception e) {
             throw new DeviceException("Device change error.");
         }
@@ -171,5 +186,97 @@ public class DeviceService {
                 .userUsing(user)
                 .disposalDate(device.getDisposalDate())
                 .build();
+    }
+
+    private static String getCheckChangesInStringParam(String changesParam, String paramDefault) {
+        if (changesParam.isEmpty()) { return " c: " + paramDefault + " на: пустое значение"; }
+        if (paramDefault.isEmpty()) { return " c: пустого значения на: " + changesParam; }
+        return " c: " + paramDefault + " на: " + changesParam;
+    }
+
+    private static void checkAndAppendChanges(String paramName, String changeValue, String defaultValue, StringBuilder message) {
+        if (!ObjectUtils.nullSafeEquals(changeValue, defaultValue)) {
+            if (!message.toString().equals(DeviceService.defaultMessage)) {
+                message.append("; ");
+            }
+            message.append(paramName)
+                    .append(getCheckChangesInStringParam(changeValue, defaultValue));
+        }
+    }
+
+    private static String getMessageIdentifyingChanges(DeviceEntity deviceChange, DeviceEntity deviceDefault) {
+        StringBuilder message = new StringBuilder(defaultMessage);
+        checkAndAppendChanges("Инвентарный номер",
+                deviceChange.getInventoryNumber(),
+                deviceDefault.getInventoryNumber(),
+                message
+        );
+        checkAndAppendChanges("Адрес",
+                formatAddress(deviceChange.getAddress()),
+                formatAddress(deviceDefault.getAddress()),
+                message
+        );
+
+        checkAndAppendChanges("Производитель",
+                formatManufacturer(deviceChange.getManufacturer()),
+                formatManufacturer(deviceDefault.getManufacturer()),
+                message
+        );
+        checkAndAppendChanges("Модель",
+                deviceChange.getModel(),
+                deviceDefault.getModel(),
+                message
+        );
+        checkAndAppendChanges("Имя 1С",
+                deviceChange.getName(),
+                deviceDefault.getName(),
+                message
+        );
+        checkAndAppendChanges("Дата ввода в эксплуатацию",
+                formatDate(deviceChange.getCommissioningDate()),
+                formatDate(deviceDefault.getCommissioningDate()),
+                message
+        );
+        checkAndAppendChanges("Серийный номер",
+                deviceChange.getSerialNumber(),
+                deviceDefault.getSerialNumber(),
+                message
+        );
+        checkAndAppendChanges("Кабинет",
+                deviceChange.getCabinet(),
+                deviceDefault.getCabinet(),
+                message
+        );
+        checkAndAppendChanges("Статус",
+                formatStatus(deviceChange.getStatus()),
+                formatStatus(deviceDefault.getStatus()),
+                message
+        );
+        checkAndAppendChanges("Пользователя устройством",
+                formatUserUsing(deviceChange.getUserUsing()),
+                formatUserUsing(deviceDefault.getUserUsing()),
+                message
+        );
+        checkAndAppendChanges("Дата гарантии \"С\"",
+                formatDate(deviceChange.getWarrantyDateWith()),
+                formatDate(deviceDefault.getWarrantyDateWith()),
+                message
+        );
+        checkAndAppendChanges("Дата гарантии \"По\"",
+                formatDate(deviceChange.getWarrantyDateBy()),
+                formatDate(deviceDefault.getWarrantyDateBy()),
+                message
+        );
+        checkAndAppendChanges("Дата списания",
+                formatDate(deviceChange.getDisposalDate()),
+                formatDate(deviceDefault.getDisposalDate()),
+                message
+        );
+        if (message.toString().equals(defaultMessage)) {
+            return "Изменений не было !";
+        } else {
+            message.append(".");
+        }
+        return message.toString();
     }
 }
