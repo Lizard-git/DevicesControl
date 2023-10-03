@@ -16,6 +16,7 @@ import sfr.application.devicescontrol.repositories.telbook.device_control.Device
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static sfr.application.devicescontrol.utils.UtilsMethods.*;
 
@@ -57,7 +58,7 @@ public class DeviceService {
     public Map<String, Long> getCountByStatusForDeviceType(DeviceTypeEntity deviceType, List<StatusEntity> allStatusByDevice) {
         Map<String, Long> result = new HashMap<>();
         allStatusByDevice.forEach(status -> result.put(status.getName(), deviceRepository.countByStatusAndType(status, deviceType)));
-        return result;
+        return new TreeMap<>(result);
     }
 
     /**
@@ -104,8 +105,7 @@ public class DeviceService {
         try {
             DeviceEntity deviceConvert = convert(deviceDTO);
             if (!device.equals(deviceConvert)) {
-                String testChanges = "";
-                testChanges = getMessageIdentifyingChanges(deviceConvert, device);
+                String testChanges = getMessageIdentifyingChanges(deviceConvert, device);
                 device = deviceRepository.save(deviceConvert);
                 historyDevicesService.newHistory(testChanges, device, TypeMessagesHistory.Info);
             } else {
@@ -199,8 +199,7 @@ public class DeviceService {
             if (!message.toString().equals(DeviceService.defaultMessage)) {
                 message.append("; ");
             }
-            message.append(paramName)
-                    .append(getCheckChangesInStringParam(changeValue, defaultValue));
+            message.append(paramName).append(getCheckChangesInStringParam(changeValue, defaultValue));
         }
     }
 

@@ -30,6 +30,15 @@ html, body {
     font-size: 14px;
 }
 
+.card-header > h5 {
+    font-family: Roboto-Light, serif !important;
+}
+
+.buttons-excel {
+    background-color: #2d8123 !important;
+    border: none;
+}
+
 .list-default {
     list-style: none;
     margin: 0;
@@ -43,11 +52,11 @@ a {
 }
 
 .default-shadow {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .bg-color-light-blue {
-    background-color: #8E91AB;
+    background-color: #646B9C;
     color: white;
 }
 

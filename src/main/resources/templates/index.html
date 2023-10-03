@@ -107,7 +107,7 @@
                 <div th:each="type: ${AllTypesDevice}" class="col-12 col-md-6 col-xl-3">
                     <div class="card bg-color-light-blue default-shadow mt-4">
                         <div class="card-header">
-                            <h6 class="m-0" th:text="${type.getName()}">Заголовок</h6>
+                            <h5 class="m-0" th:text="${type.getName()}">Заголовок</h5>
                         </div>
                         <div class="card-body">
                             <ul th:id="${type.getId()}" class="list-status-type-device list-default"> <!-- th:onload=""-->
