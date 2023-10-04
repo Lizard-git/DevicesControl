@@ -23,6 +23,10 @@ public class DeviceTypeEntity {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "type")
+    @OneToMany(mappedBy = "type", cascade = CascadeType.REMOVE)
     private List<DeviceEntity> devices;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "type", cascade = CascadeType.REMOVE)
+    private List<SpecificationsTypeEntity> specificationsType;
 }
