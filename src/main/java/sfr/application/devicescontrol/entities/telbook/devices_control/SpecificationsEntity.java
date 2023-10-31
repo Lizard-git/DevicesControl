@@ -2,6 +2,7 @@ package sfr.application.devicescontrol.entities.telbook.devices_control;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -26,6 +27,7 @@ public class SpecificationsEntity {
     @JoinColumn(name = "id_Device", nullable = false)
     private DeviceEntity device;
 
+    @Size(max = 100, message = "Слишком длинное значение!")
     @Column(name = "value", nullable = false)
     private String value;
 }

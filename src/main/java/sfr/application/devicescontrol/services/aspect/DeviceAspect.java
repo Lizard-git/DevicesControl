@@ -40,21 +40,21 @@ public class DeviceAspect {
 
     @AfterThrowing(pointcut = "deviceAddExecution(deviceDTO, ipAddress)", throwing = "exception")
     public void afterAddressAddThrowingAdvice(DeviceDTO deviceDTO, String ipAddress, Exception exception) {
-        String message;
         String deviceStr = deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber();
         switch (exception.getMessage()) {
             case "Save error. Device already created." -> {
-                message = deviceMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to add a new device. This device already exists. IP: " + ipAddress +
                         ", device:" + deviceStr);
+                historyService.newHistory(deviceMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, deviceStr);
             }
             default -> {
                 log.error("The user was unable to add a new device. IP: " + ipAddress +
                         ", device:" + deviceStr);
-                message = deviceMessagesProperties.getErrorAddMessage();
+
+                historyService.newHistory(deviceMessagesProperties.getErrorAddMessage(), ipAddress, TypeMessagesHistory.Error, deviceStr);
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, deviceStr);
+
     }
 
     @Pointcut("execution(* sfr.application.devicescontrol.services.DeviceService.change(sfr.application.devicescontrol.dto.DeviceDTO, String)) && args(deviceDTO, ipAddress)")
@@ -75,21 +75,20 @@ public class DeviceAspect {
 
     @AfterThrowing(pointcut = "deviceChangeExecution(deviceDTO, ipAddress)", throwing = "exception")
     public void afterDeviceChangeThrowingAdvice(DeviceDTO deviceDTO, String ipAddress, Exception exception) {
-        String message;
         String deviceStr = deviceDTO.getType().getName() + " " + deviceDTO.getInventoryNumber();
         switch (exception.getMessage()) {
             case "Change error. Device already created." -> {
-                message = deviceMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to change device. This device already exists. IP: " + ipAddress +
                         ", device:" + deviceStr);
+                historyService.newHistory(deviceMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, deviceStr);
             }
             default -> {
                 log.error("The user was unable to change the device. IP: " + ipAddress +
                         ", device:" + deviceStr);
-                message = deviceMessagesProperties.getErrorChangeMessage();
+                historyService.newHistory(deviceMessagesProperties.getErrorChangeMessage(), ipAddress, TypeMessagesHistory.Error, deviceStr);
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, deviceStr);
+
     }
 
     @Pointcut("execution(* sfr.application.devicescontrol.services.DeviceService.delete(sfr.application.devicescontrol.entities.telbook.devices_control.DeviceEntity, String)) && args(device, ipAddress)")
@@ -109,7 +108,7 @@ public class DeviceAspect {
     }
 
     @AfterThrowing(pointcut = "deviceDeleteExecution(device, ipAddress)", throwing = "exception")
-    public void afterAddressDeleteThrowingAdvice(DeviceEntity device, String ipAddress, Exception exception) {
+    public void afterDeviceDeleteThrowingAdvice(DeviceEntity device, String ipAddress, Exception exception) {
         String message;
         String deviceStr = device.getType().getName() + " " + device.getInventoryNumber();
         switch (exception.getMessage()) {

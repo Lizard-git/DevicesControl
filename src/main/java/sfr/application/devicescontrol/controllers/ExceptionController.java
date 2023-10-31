@@ -79,6 +79,12 @@ public class ExceptionController {
         return "redirect:/settings/devices/error";
     }
 
+    @ExceptionHandler(SpecificationsTypeException.class)
+    public String SpecificationsTypeException(SpecificationsTypeException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("Error", "Такой параметр уже существует("+e.getMessage()+")");
+        return "redirect:/settings/devices/error";
+    }
+
     @ExceptionHandler(UnknownHostException.class)
     public String UnknownHostException() {
         return "errors/error-ip";

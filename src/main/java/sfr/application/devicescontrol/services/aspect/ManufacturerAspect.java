@@ -37,27 +37,20 @@ public class ManufacturerAspect {
 
     @AfterThrowing(pointcut = "manufacturerAddExecution(name, ipAddress)", throwing = "exception")
     public void afterThrowingManufacturerAddAdvice(String name, String ipAddress, Exception exception) {
-        String message;
         switch (exception.getMessage()) {
-            case "Manufacturer already exists.": {
-                message = manufacturerMessagesProperties.getWarningAlreadyExistsMessage();
+            case "Manufacturer already exists." -> {
                 log.warn(
                         "The user was unable to add a new manufacturer. This manufacturer already exists. IP: " + ipAddress +
                                 ", manufacturer:" + name
                 );
-                break;
+                historyService.newHistory(manufacturerMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, name);
             }
-            default:{
+            default -> {
                 log.info("The user was unable to add a new manufacturer. IP: " + ipAddress + ", name manufacturer:" + name);
-                message = manufacturerMessagesProperties.getErrorAddMessage();
+                historyService.newHistory(manufacturerMessagesProperties.getErrorAddMessage(), ipAddress, TypeMessagesHistory.Error, name);
             }
         }
-        historyService.newHistory(
-                message,
-                ipAddress,
-                TypeMessagesHistory.Error,
-                name
-        );
+
     }
 }
 

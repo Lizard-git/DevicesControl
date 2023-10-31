@@ -1,7 +1,10 @@
 package sfr.application.devicescontrol.entities.telbook.devices_control;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,7 +22,14 @@ public class SpecificationsTypeEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description", nullable = false)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "id_Device_Type", nullable = false)
     private DeviceTypeEntity type;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "type", cascade = CascadeType.REMOVE)
+    private List<SpecificationsEntity> specifications;
 }

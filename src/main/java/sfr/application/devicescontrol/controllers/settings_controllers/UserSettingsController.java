@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +17,11 @@ import sfr.application.devicescontrol.services.AddressService;
 import sfr.application.devicescontrol.services.RoleService;
 import sfr.application.devicescontrol.services.UserService;
 import sfr.application.devicescontrol.services.UserTelbookService;
-import sfr.application.devicescontrol.utils.UtilsMethods;
 
 import java.net.UnknownHostException;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static sfr.application.devicescontrol.utils.UtilsMethods.ipAddressValidator;
 
 @Controller
 @AllArgsConstructor
@@ -55,7 +56,7 @@ public class UserSettingsController {
             BindingResult bindingResult,
             Model model
     ) throws UsersExceptions, UnknownHostException {
-        if(ObjectUtils.isEmpty(userDto.getPassword()) || userDto.getPassword().length() < 6) {
+        if(isEmpty(userDto.getPassword()) || userDto.getPassword().length() < 6) {
             bindingResult.addError(
                     new FieldError("NewUser",
                             "password",
@@ -66,7 +67,7 @@ public class UserSettingsController {
             model.addAttribute("Error", "");
             return "settings/settings-user";
         }
-        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        String ip = ipAddressValidator(request.getRemoteAddr());
         userService.save(userDto, ip);
         return "redirect:/settings/users?successfully=true";
     }
@@ -88,7 +89,7 @@ public class UserSettingsController {
         if (bindingResult.hasErrors()) {
             return "settings/settings-change-users";
         }
-        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        String ip = ipAddressValidator(request.getRemoteAddr());
         userService.change(userDto, ip);
         return "redirect:/settings/users?successfully=true";
     }
@@ -98,7 +99,7 @@ public class UserSettingsController {
             HttpServletRequest request,
             @PathVariable(name = "id") UserEntity user
     ) throws UsersExceptions, UnknownHostException {
-        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        String ip = ipAddressValidator(request.getRemoteAddr());
         userService.remove(user, ip);
         return "redirect:/settings/users?successfully=true";
     }
@@ -108,7 +109,7 @@ public class UserSettingsController {
             HttpServletRequest request,
             @PathVariable(name = "id") UserEntity user
     ) throws UsersExceptions, UnknownHostException {
-        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        String ip = ipAddressValidator(request.getRemoteAddr());
         userService.delete(user, ip);
         return "redirect:/settings/users?successfully=true";
     }

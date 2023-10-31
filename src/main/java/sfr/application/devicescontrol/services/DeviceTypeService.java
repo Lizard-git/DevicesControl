@@ -1,9 +1,7 @@
 package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceTypeEntity;
 import sfr.application.devicescontrol.exceptions.DeviceTypeException;
 import sfr.application.devicescontrol.repositories.telbook.device_control.DeviceTypeRepository;
@@ -11,9 +9,10 @@ import sfr.application.devicescontrol.repositories.telbook.device_control.Device
 import java.net.UnknownHostException;
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Service
 @AllArgsConstructor
-@Slf4j
 public class DeviceTypeService {
     private final DeviceTypeRepository deviceTypeRepository;
 
@@ -22,7 +21,7 @@ public class DeviceTypeService {
     }
 
     public void save(String name, String ipAddress) throws DeviceTypeException, UnknownHostException {
-        if (!ObjectUtils.isEmpty(deviceTypeRepository.findAllByNameContaining(name))) {
+        if (!isEmpty(deviceTypeRepository.findAllByNameContainingIgnoreCase(name))) {
             throw new DeviceTypeException("Error. This type already exists.");
         }
         try {

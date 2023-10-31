@@ -38,22 +38,20 @@ public class DeviceTypeAspect {
     }
     @AfterThrowing(pointcut = "deviceTypeAddExecution(deviceType, ipAddress)", throwing = "exception")
     public void afterDeviceTypeAddThrowingAdvice(String deviceType, String ipAddress, Exception exception) {
-        String message;
         switch (exception.getMessage()) {
             case "Error. This type already exists." -> {
-                message = deviceTypeMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("Failed addition of a new device type. This type already exists. IP: " + ipAddress +
                         ", address:" + deviceType);
+                historyService.newHistory(deviceTypeMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, deviceType);
             }
             default -> {
                 log.error(
                         "Failed addition of a new device type. IP: " + ipAddress +
                                 ", address:" + deviceType
                 );
-                message = deviceTypeMessagesProperties.getErrorAddMessage();
+                historyService.newHistory(deviceTypeMessagesProperties.getErrorAddMessage(), ipAddress, TypeMessagesHistory.Error, deviceType);
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, deviceType);
     }
 }
 

@@ -1,9 +1,7 @@
 package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import sfr.application.devicescontrol.dto.DeviceDTO;
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceTypeEntity;
@@ -18,11 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static org.springframework.util.ObjectUtils.nullSafeEquals;
 import static sfr.application.devicescontrol.utils.UtilsMethods.*;
 
 @Service
 @AllArgsConstructor
-@Slf4j
 public class DeviceService {
     private final DeviceRepository deviceRepository;
     private final UserTelbookService userTelbookService;
@@ -137,7 +136,7 @@ public class DeviceService {
      */
     public DeviceEntity convert(DeviceDTO deviceDTO) {
         String domainNameUsing = null;
-        if (!ObjectUtils.isEmpty(deviceDTO.getUserUsing())) {
+        if (!isEmpty(deviceDTO.getUserUsing())) {
             domainNameUsing = deviceDTO.getUserUsing().getDomain();
         }
         return DeviceEntity.builder()
@@ -166,7 +165,7 @@ public class DeviceService {
      */
     public DeviceDTO convert(DeviceEntity device) {
         UsersTelbookEntity user = null;
-        if(!ObjectUtils.isEmpty(userTelbookService.getByDomain(device.getUserUsing()))) {
+        if(!isEmpty(userTelbookService.getByDomain(device.getUserUsing()))) {
             user = userTelbookService.getByDomain(device.getUserUsing());
         }
         return DeviceDTO.builder()
@@ -195,7 +194,7 @@ public class DeviceService {
     }
 
     private static void checkAndAppendChanges(String paramName, String changeValue, String defaultValue, StringBuilder message) {
-        if (!ObjectUtils.nullSafeEquals(changeValue, defaultValue)) {
+        if (!nullSafeEquals(changeValue, defaultValue)) {
             if (!message.toString().equals(DeviceService.defaultMessage)) {
                 message.append("; ");
             }

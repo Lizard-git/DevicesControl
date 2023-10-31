@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
+    <link rel="shortcut icon" th:href="@{/image/logo.png}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/select2/css/select2.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/plugins/select2/css/select2-bootstrap.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style-auth.css}">
+    <style>
+        .select2 {
+            width: 100% !important;
+        }
+    </style>
+
 </head>
 <body>
 <!--    <img th:src="@{/image/login.webp}" class="img-fluid img-login" alt="Sample image">-->
@@ -29,7 +36,7 @@
                 </div>
                 <div class="input-form-group">
                     <label for="user-password">Пароль</label>
-                    <input id="user-password" class="" type="password" name="password">
+                    <input id="user-password" class="form-control" type="password" name="password">
                 </div>
                 <button class="btn btn-primary" type="submit">Войти</button>
 
@@ -39,7 +46,7 @@
                 </div>
 
                 <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                    <p class="mb-0 mt-4">version 2.2.2</p>
+                    <p class="mb-0 mt-4">version 2.3.0</p>
                 </div>
             </form>
         </div>

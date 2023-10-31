@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет ВТ</title>
+    <link rel="shortcut icon" th:href="@{/image/logo.png}" />
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
@@ -21,13 +22,13 @@
         <div class="table-responsive p-0 mt-4">
             <table id="tableDevice" class="w-100 table table-striped align-items-center mb-0"
                    data-sticky-header="true" data-sticky-header-offset-y="60">
-                <thead>
+                <thead class="">
                 <tr>
-                    <th class="text-uppercase text- text-secondary text-xxs font-weight-bolder opacity-7">
-                        <small>Тип устройства</small>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        <small><nobr>Тип устройства</nobr></small>
                     </th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        <small>Инвентарный номер</small>
+                        <small><nobr>Инвентарный номер</nobr></small>
                     </th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         <small>Производитель</small>
@@ -64,7 +65,7 @@
     $(document).ready(function() {
 
         let table = $('#tableDevice').DataTable({
-            pageLength: 30,
+            pageLength: 15,
             language: {
                 url: '/plugins/data-tables/ru.json'
             },
@@ -107,10 +108,32 @@
 
             columns : [{
                 type : "string",
-                data : 'type.name'
+                data : 'type.name',
+                render: function (data, type, row) {
+                    switch (data) {
+                        case 'ИБП':
+                            return '<i class="bi bi-battery-charging me-2"></i>' + data; // Иконка для активного статуса
+                        case 'Системный блок':
+                            return '<i class="bi bi-pc me-2"></i>' + data; // Иконка для неактивного статуса
+                        case 'Монитор':
+                            return '<i class="bi bi-display me-2"></i>' + data;
+                        case 'Принтер':
+                            return '<i class="bi bi-printer me-2"></i>' + data;
+                        case 'Сканер':
+                            return '<i class="bi bi-upc-scan me-2"></i>' + data;
+                        case 'Ноутбуки':
+                            return '<i class="bi bi-pc-display-horizontal me-2"></i>' + data;
+                        case 'МФУ':
+                            return '<i class="bi bi-printer-fill me-2"></i>' + data;
+                        case 'Моноблок':
+                            return '<i class="bi bi-tv me-2"></i>' + data;
+                        default:
+                            return data;
+                    }
+                }
             }, {
                 type : "string",
-                data : 'inventoryNumber',
+                data : 'inventoryNumber'
             },  {
                 type : "string",
                 data : 'manufacturer'

@@ -32,6 +32,7 @@ $(document).ready(function () {
             $("#disposal-date-input").removeClass("d-none");
         } else {
             $("#disposal-date-input").addClass("d-none");
+            $("#device-disposal-date").val(null); // удаляем дату списания в случае изменения статуса
         }
     });
 

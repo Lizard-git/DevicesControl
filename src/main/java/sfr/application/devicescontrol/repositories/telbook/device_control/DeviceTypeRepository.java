@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DeviceTypeRepository extends JpaRepository<DeviceTypeEntity, Long> {
-    List<DeviceTypeEntity> findAllByNameContaining(String name);
+    List<DeviceTypeEntity> findAllByNameContainingIgnoreCase(String name);
 }

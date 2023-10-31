@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет ВТ</title>
+    <link rel="shortcut icon" th:href="@{/image/logo.png}" />
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
@@ -20,7 +21,9 @@
             <a class="btn btn-primary" href="/devices/all">Назад</a>
             <div class="d-flex">
                 <button class="btn btn-warning mx-3 d-none">Списать</button>
-
+                <button id="btn-copy" class="btn btn-light mx-3" onclick="copyToClipboard();">
+                    <i class="bi bi-share"></i>
+                </button>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Удалить
@@ -111,9 +114,9 @@
                                 </select>
                             </div>
                             <div id="disposal-date-input" class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative d-none">
-                                <label for="device-disposal-date-change">Дата списания</label>
+                                <label for="device-disposal-date">Дата списания</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('disposalDate')}" th:errors="*{disposalDate}">Ошибка</small>
-                                <input id="device-disposal-date-change" class="form-control" type="date" th:field="*{disposalDate}">
+                                <input id="device-disposal-date" class="form-control" type="date" th:field="*{disposalDate}">
                             </div>
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <label for="device-cabinet-change">Кабинет</label>
@@ -188,6 +191,18 @@
                 </form>
             </div>
         </div>
+        <div th:if="${Specifications.size() > 0}" class="card default-shadow mt-4">
+            <div class="card-header">Характеристики</div>
+            <form th:method="post" th:action="'/devices/'+ ${Device.getId()} +'/specification/save'">
+                <div class="card-body card-body-custom">
+                    <div th:each="spec: ${Specifications}">
+                        <label th:for="${spec.getKey().getId()}" th:text="${spec.getKey().getName()}" class="mt-4"></label>
+                        <input th:id="${spec.getKey().getId()}" class="w-100 form-control" type="text" th:name="${spec.getKey().getDescription()}" th:value="${spec.getValue()}"/>
+                    </div>
+                    <button class="btn btn-primary w-100 mt-3" type="submit">Изменить</button>
+                </div>
+            </form>
+        </div>
 
         <div class="card default-shadow mt-4">
             <div class="card-header">История устройства</div>
@@ -216,6 +231,17 @@
         </div>
 
     </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Уведомление</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+            </div>
+            <div class="toast-body">
+                Вы успешно скопировали URL адрес!
+            </div>
+        </div>
+    </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>
 <script type="text/javascript" th:src="@{/plugins/jquery/jquery-3.6.0.min.js}"></script>
@@ -224,6 +250,12 @@
 <script type="text/javascript" th:src="@{/plugins/data-tables/DataTables-1.13.5/js/dataTables.bootstrap5.js}"></script>
 <script>
     $(document).ready(function() {
+        const btnTrigger = document.getElementById("btn-copy");
+        const toastLiveExample = document.getElementById('liveToast');
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        btnTrigger.addEventListener('click', () => {
+            toastBootstrap.show()
+        })
         $('.js-example-basic-single').select2({
             theme: "bootstrap"
         });
@@ -250,19 +282,6 @@
                 type: 'POST',
                 dataSrc: function (json) {
                     let data = json.map(function (d) {
-                        // let typeSettlements = d.address.settlements.type;
-                        // let nameSettlements = d.address.settlements.name;
-                        // let street = d.address.street;
-                        // let house = d.address.house;
-                        // let region = '(' + d.address.settlements.region.name + ' район)';
-                        // d.address = typeSettlements + ' ' + nameSettlements + ' ' + street + ' ' + house + ' ' + region;
-                        // if (d.manufacturer === null) {
-                        //     d.manufacturer = "Не указанно";
-                        // } else {
-                        //     d.manufacturer = d.manufacturer.name;
-                        // }
-                        // if (d.model === "" || d.model === null) d.model = 'Не указанно';
-                        // if (d.userUsing === null  || d.userUsing === "") d.userUsing = 'Не указанно';
                         return d;
                     })
                     return data;
@@ -282,7 +301,29 @@
         });
         table.order( [0, 'desc'] ).draw();
     });
+    function copyToClipboard() {
 
+        let url = window.location.href;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url)
+                .then(function() {
+                    console.log('Успешное копирование!')
+                })
+                .catch(function(error) {
+                    message = "Не удалось скопировать URL в буфер обмена: " + error
+                    console.error('Не удалось скопировать URL в буфер обмена:', error);
+                });
+        } else {
+            // Для старых браузеров
+            var tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            console.log('Успешное копирование!')
+        }
+    }
 </script>
 <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </body>

@@ -1,7 +1,6 @@
 package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 import sfr.application.devicescontrol.configs.properties.AddressMessagesProperties;
@@ -14,7 +13,6 @@ import sfr.application.devicescontrol.utils.mapers.AddressConverter;
 import java.util.List;
 
 @Service
-@Slf4j
 @AllArgsConstructor
 @EnableConfigurationProperties(AddressMessagesProperties.class)
 public class AddressService {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет ВТ</title>
+    <link rel="shortcut icon" th:href="@{/image/logo.png}" />
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-5.3.0/css/bootstrap.css}">
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
@@ -80,9 +81,9 @@
                                 </select>
                             </div>
                             <div id="disposal-date-input" class="input-form-group d-flex justify-content-between flex-column mb-4 position-relative d-none">
-                                <label for="device-disposal-date-change">Дата списания</label>
+                                <label for="device-disposal-date">Дата списания</label>
                                 <small class="form-text text-danger" th:if="${#fields.hasErrors('disposalDate')}" th:errors="*{disposalDate}">Ошибка</small>
-                                <input id="device-disposal-date-change" class="form-control" type="date" th:field="*{disposalDate}">
+                                <input id="device-disposal-date" class="form-control" type="date" th:field="*{disposalDate}">
                             </div>
                             <div class="input-form-group d-flex justify-content-between flex-column mb-4">
                                 <label for="device-cabinet-change">Кабинет</label>

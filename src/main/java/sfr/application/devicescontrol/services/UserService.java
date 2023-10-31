@@ -1,10 +1,8 @@
 package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import sfr.application.devicescontrol.dto.UserDto;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.exceptions.UsersExceptions;
@@ -13,9 +11,10 @@ import sfr.application.devicescontrol.repositories.telbook.device_control.UserRe
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Service
 @AllArgsConstructor
-@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final UserTelbookService userTelbookService;
@@ -45,13 +44,13 @@ public class UserService {
      * @throws UsersExceptions - Ошибка сохранения, скорее всего такой пользователь уже существует.
      */
     public void save(UserDto userDto, String ipAddress) throws UsersExceptions {
-        if (!ObjectUtils.isEmpty(userDto.getId())) {
+        if (!isEmpty(userDto.getId())) {
             throw new UsersExceptions("Such user already exists.");
         }
-        if (!ObjectUtils.isEmpty(userRepository.findByLogin(userDto.getLogin()))) {
+        if (!isEmpty(userRepository.findByLogin(userDto.getLogin()))) {
             throw new UsersExceptions("Such user already exists.");
         }
-        if (!ObjectUtils.isEmpty(userRepository.findByDomainName(userDto.getLogin()))) {
+        if (!isEmpty(userRepository.findByDomainName(userDto.getLogin()))) {
             throw new UsersExceptions("Such user already exists.");
         }
         try {
@@ -69,7 +68,7 @@ public class UserService {
      */
     public void change(UserDto userDto, String ipAddress) throws UsersExceptions {
         UserEntity user = userRepository.getReferenceById(userDto.getId());
-        if (ObjectUtils.isEmpty(user)) {
+        if (isEmpty(user)) {
             throw new UsersExceptions("Failed to change user.");
         }
         try {
@@ -114,10 +113,10 @@ public class UserService {
      * @throws UsersExceptions - ошибка если конвертация невозможна
      */
     public UserEntity convert(UserDto userDto) throws UsersExceptions {
-        if (ObjectUtils.isEmpty(userTelbookService.getByDomain(userDto.getLogin()))) {
+        if (isEmpty(userTelbookService.getByDomain(userDto.getLogin()))) {
             throw new UsersExceptions("Failed to convert DTO to Entity");
         }
-        if (ObjectUtils.isEmpty(userDto.getPassword())) {
+        if (isEmpty(userDto.getPassword())) {
             throw new UsersExceptions("Error when converting DTO to Entity. Password is empty.");
         }
         return UserEntity.builder()

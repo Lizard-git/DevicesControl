@@ -34,30 +34,26 @@ public class AddressAspect {
                 TypeMessagesHistory.Info,
                 addressStr
         );
-        log.info(
-                "Successfully adding a new address. IP: " + ipAddress +
-                        ", address:" + addressStr
-        );
+        log.info("Successfully adding a new address. IP: " + ipAddress + ", address:" + addressStr);
     }
     @AfterThrowing(pointcut = "addressAddExecution(address, ipAddress)", throwing = "exception")
     public void afterAddressAddThrowingAdvice(AddressDto address, String ipAddress, Exception exception) {
-        String message;
         String addressStr = address.getSettlements().getName() + " " + address.getStreet() + " " + address.getHouse();
         switch (exception.getMessage()) {
             case "Address already exists." -> {
-                message = addressMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to add a new address. This address already exists. IP: " + ipAddress +
                         ", address:" + addressStr);
+                historyService.newHistory(addressMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, addressStr);
             }
             default -> {
                 log.error(
                         "The user was unable to add a new address. IP: " + ipAddress +
                                 ", address:" + addressStr
                 );
-                message = addressMessagesProperties.getErrorAddMessage();
+                historyService.newHistory(addressMessagesProperties.getErrorAddMessage(), ipAddress, TypeMessagesHistory.Error, addressStr);
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, addressStr);
+
     }
 
     @Pointcut("execution(* sfr.application.devicescontrol.services.AddressService.change(sfr.application.devicescontrol.dto.AddressDto, String)) && args(address, ipAddress)")
@@ -79,28 +75,26 @@ public class AddressAspect {
     }
     @AfterThrowing(pointcut = "AddressChangeExecution(address, ipAddress)", throwing = "exception")
     public void afterAddressChangeThrowingAdvice(AddressDto address, String ipAddress, Exception exception) {
-        String message;
         String addressStr = address.getSettlements().getName() + " " + address.getStreet() + " " + address.getHouse();
         switch (exception.getMessage()) {
             case "Address already exists." -> {
-                message = addressMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to add a new address. This address already exists. IP: " + ipAddress +
                         ", address:" + addressStr);
+                historyService.newHistory(addressMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, addressStr);
             }
             case "Attempting to modify an entity that is not in the database." -> {
-                message = addressMessagesProperties.getErrorChangeNonExistentEntry();
                 log.error("The user was unable to change the address. An attempt to change an entity that does not exist. IP: " + ipAddress +
                         ", address:" + addressStr);
+                historyService.newHistory(addressMessagesProperties.getErrorChangeNonExistentEntry(), ipAddress, TypeMessagesHistory.Error, addressStr);
             }
             default -> {
                 log.error(
                         "The user was unable to change the address. IP: " + ipAddress +
                                 ", address:" + addressStr
                 );
-                message = addressMessagesProperties.getErrorChangeMessage();
+                historyService.newHistory(addressMessagesProperties.getErrorChangeMessage(), ipAddress, TypeMessagesHistory.Error, addressStr);
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, addressStr);
     }
 
     @Pointcut("execution(* sfr.application.devicescontrol.services.AddressService.delete(sfr.application.devicescontrol.entities.telbook.devices_control.AddressEntity, String)) && args(address, ipAddress)")
@@ -123,23 +117,21 @@ public class AddressAspect {
 
     @AfterThrowing(pointcut = "AddressDeleteExecution(address, ipAddress)", throwing = "exception")
     public void afterAddressDeleteThrowingAdvice(AddressEntity address, String ipAddress, Exception exception) {
-        String message;
         String addressStr = address.getSettlements().getName() + " " + address.getStreet() + " " + address.getHouse();
         switch (exception.getMessage()) {
-            case "ailed to delete address. The entity is registered at the address." -> {
-                message = addressMessagesProperties.getErrorSomethingIsIndicatedMessage();
+            case "Failed to delete address. The entity is registered at the address." -> {
                 log.error("The user was unable to delete the address. An attempt to delete an address at which something is registered. IP: " + ipAddress +
                         ", address:" + addressStr);
+                historyService.newHistory(addressMessagesProperties.getErrorSomethingIsIndicatedMessage(), ipAddress, TypeMessagesHistory.Error, addressStr);
             }
             default -> {
                 log.error(
                         "The user was unable to delete the address. IP: " + ipAddress +
                                 ", address:" + addressStr
                 );
-                message = addressMessagesProperties.getErrorDeleteMessage();
+                historyService.newHistory(addressMessagesProperties.getErrorDeleteMessage(), ipAddress, TypeMessagesHistory.Error, addressStr);
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, addressStr);
     }
 }
 

@@ -5,9 +5,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sfr.application.devicescontrol.dto.DeviceDTO;
 import sfr.application.devicescontrol.entities.telbook.devices_control.DeviceEntity;
 import sfr.application.devicescontrol.entities.telbook.prov_ter_org.UsersTelbookEntity;
@@ -18,6 +18,10 @@ import sfr.application.devicescontrol.utils.UtilsMethods;
 
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static sfr.application.devicescontrol.utils.UtilsMethods.ipAddressValidator;
 
 @Controller
 @AllArgsConstructor
@@ -30,6 +34,9 @@ public class DevicesController {
     private final StatusService statusService;
     private final ManufacturerService manufacturerService;
     private final DeviceTypeService deviceTypeService;
+    private final SpecificationsTypeService specificationsTypeService;
+    private final SpecificationsService specificationsService;
+
     @GetMapping(value = {"/all"})
     public String PageAllDevice() {
         return "devices/all-devices";
@@ -59,7 +66,7 @@ public class DevicesController {
             model.addAttribute("Error", "");
             return "devices/new-device";
         }
-        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        String ip = ipAddressValidator(request.getRemoteAddr());
         deviceService.save(deviceDTO, ip);
         return "redirect:/devices/new?successfully=true";
     }
@@ -73,11 +80,11 @@ public class DevicesController {
             Model model
     ) {
         UsersTelbookEntity usersTelbook = userTelbookService.getByDomain(device.getUserUsing());
-        if (!ObjectUtils.isEmpty(device.getUserUsing()) && ObjectUtils.isEmpty(usersTelbook)) {
+        if (!isEmpty(device.getUserUsing()) && isEmpty(usersTelbook)) {
             model.addAttribute("OldUserUsing", device.getUserUsing());
         }
         List<UsersTelbookEntity> userByDepartment;
-        if (ObjectUtils.isEmpty(device.getUserUsing()) || ObjectUtils.isEmpty(usersTelbook)) {
+        if (isEmpty(device.getUserUsing()) || isEmpty(usersTelbook)) {
             userByDepartment = userTelbookService.getAll();
         } else {
             userByDepartment = userTelbookService.getAllUserByDepartment(
@@ -93,6 +100,13 @@ public class DevicesController {
         model.addAttribute("Successfully", successfully);
         model.addAttribute("Device", deviceService.convert(device));
         model.addAttribute("AllUsersTelbookByDepartmen", userByDepartment);
+        model.addAttribute("Specifications",
+                UtilsMethods.mergeListSpecification(
+                        specificationsTypeService.getAllByType(device.getType()),
+                        specificationsService.getAllByDevice(device))
+        );
+//        model.addAttribute("AllSpecificationType", specificationsTypeService.getAllByType(device.getType()));
+//        model.addAttribute("SpecificationDevice", specificationsService.getAllByDevice(device));
         return "devices/device";
     }
 
@@ -106,7 +120,7 @@ public class DevicesController {
     ) throws UnknownHostException, DeviceException {
         if (bindingResult.hasErrors()) {
             List<UsersTelbookEntity> userByDepartment;
-            if (ObjectUtils.isEmpty(device.getUserUsing())) {
+            if (isEmpty(device.getUserUsing())) {
                 userByDepartment = userTelbookService.getAll();
             } else {
                 userByDepartment = userTelbookService.getAllUserByDepartment(
@@ -114,9 +128,16 @@ public class DevicesController {
                 );
             }
             model.addAttribute("AllUsersTelbookByDepartmen", userByDepartment);
+            model.addAttribute("Specifications",
+                    UtilsMethods.mergeListSpecification(
+                    specificationsTypeService.getAllByType(device.getType()),
+                    specificationsService.getAllByDevice(device))
+            );
+//            model.addAttribute("AllSpecificationType", );
+//            model.addAttribute("SpecificationDevice", );
             return "devices/device";
         }
-        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        String ip = ipAddressValidator(request.getRemoteAddr());
         deviceService.change(deviceDTO, ip);
         return "redirect:/devices/get/" + device.getId() + "?successfully=true";
     }
@@ -126,7 +147,7 @@ public class DevicesController {
             HttpServletRequest request,
             @PathVariable(name = "id") DeviceEntity device
     ) throws UnknownHostException, DeviceException {
-        String ip = UtilsMethods.ipAddressValidator(request.getRemoteAddr());
+        String ip = ipAddressValidator(request.getRemoteAddr());
         deviceService.delete(device, ip);
         return "redirect:/devices/all";
     }
@@ -138,6 +159,20 @@ public class DevicesController {
         model.addAttribute("Device", new DeviceDTO());
         model.addAttribute("AllUsersTelbookByDepartmen", userTelbookService.getAll());
         return "devices/new-device";
+    }
+
+    @PostMapping(value = {"/{id}/specification/save"})
+    public String saveSpecification(
+            @RequestParam Map<String, String> formValues,
+            @PathVariable(name = "id") DeviceEntity device,
+            RedirectAttributes redirectAttributes
+    ) {
+        for (Map.Entry<String, String> entry : formValues.entrySet()) {
+            redirectAttributes.addFlashAttribute("Error", "Слишком длинное значение поля!");
+            if (entry.getValue().length() > 100) return "redirect:/devices/get/" + device.getId() + "?error=true";
+        }
+        specificationsService.save(formValues, device);
+        return "redirect:/devices/get/" + device.getId() + "?successfully=true";
     }
 
     @ModelAttribute

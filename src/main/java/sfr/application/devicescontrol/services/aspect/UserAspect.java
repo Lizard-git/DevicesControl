@@ -38,20 +38,19 @@ public class UserAspect {
 
     @AfterThrowing(pointcut = "userAddExecution(userDto, ipAddress)", throwing = "exception")
     public void afterUserAddThrowingAdvice(UserDto userDto, String ipAddress, Exception exception) {
-        String message;
         switch (exception.getMessage()) {
             case "User already created." -> {
-                message = userMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to add a new user. This user already exists. IP: " + ipAddress +
                         ", user:" + userDto.getLogin());
+                historyService.newHistory(userMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, userDto.getLogin());
             }
             default -> {
                 log.error("The user was unable to add a new user. IP: " + ipAddress +
                         ", user:" + userDto.getLogin());
-                message = userMessagesProperties.getErrorAddMessage();
+                historyService.newHistory(userMessagesProperties.getErrorAddMessage(), ipAddress, TypeMessagesHistory.Error, userDto.getLogin());
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, userDto.getLogin());
+
     }
 
     @Pointcut("execution(* sfr.application.devicescontrol.services.UserService.change(sfr.application.devicescontrol.dto.UserDto, String)) && args(userDto, ipAddress)")
@@ -71,20 +70,19 @@ public class UserAspect {
 
     @AfterThrowing(pointcut = "userChangeExecution(userDto, ipAddress)", throwing = "exception")
     public void afterUserChangeThrowingAdvice(UserDto userDto, String ipAddress, Exception exception) {
-        String message;
         switch (exception.getMessage()) {
             case "User already created." -> {
-                message = userMessagesProperties.getWarningAlreadyExistsMessage();
                 log.warn("The user was unable to change a new user. This user already exists. IP: " + ipAddress +
                         ", user:" + userDto.getLogin());
+                historyService.newHistory(userMessagesProperties.getWarningAlreadyExistsMessage(), ipAddress, TypeMessagesHistory.Warning, userDto.getLogin());
             }
             default -> {
                 log.error("The user was unable to change a new user. IP: " + ipAddress +
                         ", user:" + userDto.getLogin());
-                message = userMessagesProperties.getErrorAddMessage();
+                historyService.newHistory(userMessagesProperties.getErrorAddMessage(), ipAddress, TypeMessagesHistory.Error, userDto.getLogin());
             }
         }
-        historyService.newHistory(message, ipAddress, TypeMessagesHistory.Error, userDto.getLogin());
+
     }
 
     @Pointcut("execution(* sfr.application.devicescontrol.services.UserService.remove(sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity, String)) && args(user, ipAddress)")

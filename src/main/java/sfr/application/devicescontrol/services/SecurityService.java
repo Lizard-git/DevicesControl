@@ -1,7 +1,6 @@
 package sfr.application.devicescontrol.services;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import sfr.application.devicescontrol.entities.telbook.devices_control.RoleEntity;
 import sfr.application.devicescontrol.entities.telbook.devices_control.UserEntity;
 import sfr.application.devicescontrol.repositories.telbook.device_control.UserRepository;
@@ -21,8 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Service
-@Slf4j
 @AllArgsConstructor
 public class SecurityService implements UserDetailsService {
 
@@ -31,7 +30,7 @@ public class SecurityService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByLoginAndIsDeletedNull(login);
-        if (ObjectUtils.isEmpty(user)) {
+        if (isEmpty(user)) {
             throw new UsernameNotFoundException(String.format(" User '%s' not found", login));
         }
         return new User(user.getLogin(), user.getPassword(), mapRoleToAuthorities(user.getRole()));
