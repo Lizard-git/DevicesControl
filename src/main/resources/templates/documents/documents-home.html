@@ -9,18 +9,83 @@
     <link rel="stylesheet" th:href="@{/plugins/bootstrap-icons-1.10.5/font/bootstrap-icons.css}">
     <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 0 15px;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
 <nav th:replace="~{fragments/sidebar-fragment.html::sidebar('/doc')}" ></nav>
 <main id="content-main">
     <div class="container-fluid">
         <div th:replace="~{fragments/header-title-fragment.html::header-title('Документы')}"></div>
+        <div class="card default-shadow mt-4">
+            <div class="card-header">Полная выгрузка</div>
+            <div class="card-body card-body-custom d-flex">
+                <div class="loader"></div>
+                <a onclick="getFullUnloading()" class="btn btn-primary">Получить</a>
+            </div>
+        </div>
     </div>
 </main>
 <script type="text/javascript" th:src="@{/plugins/bootstrap-5.3.0/js/bootstrap.bundle.js}"></script>
 <script type="text/javascript" th:src="@{/plugins/jquery/jquery-3.6.0.min.js}"></script>
 <script type="text/javascript" th:src="@{/plugins/select2/js/select2.min.js}"></script>
 <script>
+    function getFullUnloading() {
+        $('.loader').css('display', 'block');
+        $.ajax({
+            type: 'get',
+            url: '/api/v1/docs/unloading/full',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function(response) {
+                // Скрыть иконку загрузки
+                $('#loading-icon').hide();
+
+                // Создание ссылки для скачивания файла
+                const url = URL.createObjectURL(response);
+
+                // Создание ссылки для скачивания файла
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'file.xlsx';
+
+                // Добавление ссылки на страницу
+                document.body.appendChild(link);
+
+                // Клик по ссылке для скачивания файла
+                link.click();
+
+                // Удаление ссылки после скачивания файла
+                document.body.removeChild(link);
+                $('.loader').css('display', 'none');
+            },
+            error: function(error) {
+                console.error('Ошибка при загрузке файла:', error);
+
+                // Скрыть иконку загрузки в случае ошибки
+                $('#loading-icon').hide();
+                $('.loader').css('display', 'none');
+            }
+        });
+
+    }
+
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
     });

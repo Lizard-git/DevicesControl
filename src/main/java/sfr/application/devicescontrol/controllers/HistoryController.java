@@ -25,6 +25,7 @@ public class HistoryController {
                         PageRequest.of(page, 100, Sort.by("id").descending())
                 )
         );
-        return "history/history-home";
+
+    return "history/history-home";
     }
 }
