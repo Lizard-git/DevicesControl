@@ -34,9 +34,14 @@
         <div th:replace="~{fragments/header-title-fragment.html::header-title('Документы')}"></div>
         <div class="card default-shadow mt-4">
             <div class="card-header">Полная выгрузка</div>
-            <div class="card-body card-body-custom d-flex">
-                <div class="loader"></div>
-                <a onclick="getFullUnloading()" class="btn btn-primary">Получить</a>
+            <div class="card-body card-body-custom">
+                <div class="alert alert-secondary" role="alert">
+                    Получает полную выгрузку в Excel со всеми устройствами, пользователями и отделами.
+                </div>
+                <div class="d-flex mt-4">
+                    <div class="loader"></div>
+                    <a onclick="getFullUnloading()" class="btn btn-primary">Получить</a>
+                </div>
             </div>
         </div>
     </div>
